@@ -93,6 +93,7 @@ async def chat(reader, writer):
                     return
                 else:
                     print("skip")
+
                 send = asyncio.create_task(reader.readline())
             elif q is receive:
                 receive = asyncio.create_task(clients_conns[name].get())

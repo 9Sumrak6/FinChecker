@@ -50,9 +50,9 @@ def recieve(conn, client):
 
         new = conn.recv(1024)
         cmd = new[:5].decode()
-        print(cmd)
+
         if cmd == 'sayal':
-            print(new.decode())
+            print(new.decode()[6:])
         elif cmd == 'begin' or cmd[:3] == 'end':
             data = new.decode().split()
 
