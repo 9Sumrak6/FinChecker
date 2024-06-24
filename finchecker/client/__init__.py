@@ -1,7 +1,8 @@
 import socket
 import sys
 import cmd
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFormLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QVBoxLayout, QScrollArea
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFormLayout, QLabel, QLineEdit, QPushButton, \
+    QMessageBox, QVBoxLayout, QScrollArea, QGridLayout, QCompleter
 from PyQt5.QtCore import Qt
 
 
@@ -91,98 +92,41 @@ class LoginFormApp(QMainWindow):
             QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")
 
 
-class ChatApp(QMainWindow):
-    def __init__(self, name):
-        super().__init__()
-        self.username = name
-
-        # set scroll options
-        self.scroll = QScrollArea()
-
-        # Set the window properties (title and initial size)
-        self.setWindowTitle("Chat Application")
-        self.setGeometry(100, 100, 400, 300)  # (x, y, width, height)
-
-        # Create a central widget for the main window
-        central_widget = QWidget()
-        self.setCentralWidget(self.scroll)
-
-        # Create a QVBoxLayout to arrange the widgets
-        layout = QVBoxLayout()
-
-        # Create a QLabel widget to display chat messages
-        self.chat_label = QLabel()
-        self.chat_label.setWordWrap(True)  # Wrap long messages
-        layout.addWidget(self.chat_label)
-
-        # Create a QLineEdit for typing new messages
-        self.message_input = QLineEdit()
-        self.message_input.setPlaceholderText("Type your message here...and press Enter key.")
-        self.message_input.returnPressed.connect(self.send_message)
-        layout.addWidget(self.message_input)
-
-        # Set the layout for the central widget
-        central_widget.setLayout(layout)
-
-        # Initialize chat history
-        self.chat_history = []
-
-        # Scroll Area Properties
-        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scroll.setWidgetResizable(True)
-        self.scroll.setWidget(central_widget)
-
-    def send_message(self):
-        # Get the message from the input field
-        message = self.username + ': ' + self.message_input.text()
-
-# TODO: отправить сообщение серверу
-        # Append the message to the chat history
-        self.chat_history.append(message)
-
-        # Update the chat display
-        self.update_chat_display()
-
-        # Clear the input field
-        self.message_input.clear()
-
-# TODO: отображать сообщения от других клиентов
-    def update_chat_display(self):
-        # Display the chat history in the QLabel
-        chat_text = "\n".join(self.chat_history)
-        self.chat_label.setText(chat_text)
-
-class ButtonsApp(QMainWindow):
-    def __init__(self):
+class Parametres(QWidget):
+    def __init__(self, cmd):
         super().__init__()
         self.start_date = ''
         self.end_date = ''
         self.filename = ''
 
+        layout = QVBoxLayout()
+        self.label = QLabel("Another Window")
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
         # Set the window properties (title and initial size)
         #self.setWindowTitle("Login Form")
-        self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
+        #self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
 
-        # Create a central widget for the main window
+        '''# Create a central widget for the main window
         central_widget = QWidget()
-        self.setCentralWidget(central_widget)
+        self.setCentralWidget(central_widget)'''
 
-        layout = QGridLayout()
+        '''layout = QGridLayout()
         self.setLayout(layout)
 
         # auto complete options
-        names = ["correlation table", "stock returns", "dividends", "financials", "balance sheet", "cash flow", "recommendations", "major holders", "institutional holders", "graphics"]
+        names = ["AMAZON", "GOOGLE"]
         completer = QCompleter(names)
 
         # create line edit and add auto complete
         lineedit_label = QLabel("Command")
         self.lineedit = QLineEdit()
         self.lineedit.setCompleter(completer)
-        layout.addWidget(self.lineedit, 0, 0)
+        layout.addWidget(self.lineedit, 0, 0)'''
 
         # Create a QFormLayout to arrange the widgets
-        form_layout = QFormLayout()
+        '''form_layout = QFormLayout()
 
         # Create QLabel and QLineEdit widgets for username
         start_date_label = QLabel("Start date:")
@@ -199,7 +143,7 @@ class ButtonsApp(QMainWindow):
         submit_button.clicked.connect(self.submit)
 
         # Add widgets to the form layout
-        form_layout.addRow(lineedit_label, self.lineedit)
+        #form_layout.addRow(lineedit_label, self.lineedit)
         form_layout.addRow(start_date_label, self.start_date_field)
         form_layout.addRow(end_date_label, self.end_date_field)
         form_layout.addRow(filename_label, self.filename_field)
@@ -223,7 +167,96 @@ class ButtonsApp(QMainWindow):
             self.end_date = end_date
             QMessageBox.information(self, "Login Successful", "Welcome, " + "!")
         else:
-            QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")
+            QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")'''
+
+class ChatApp(QMainWindow):
+    def __init__(self, name):
+        super().__init__()
+        self.username = name
+        self.cmd = ''
+
+        # set scroll options
+        self.scroll = QScrollArea()
+
+        # Set the window properties (title and initial size)
+        self.setWindowTitle("Chat Application")
+        self.setGeometry(100, 100, 400, 300)  # (x, y, width, height)
+
+        # Create a central widget for the main window
+        central_widget = QWidget()
+        self.setCentralWidget(self.scroll)
+
+        # Create a QVBoxLayout to arrange the widgets
+        layout = QVBoxLayout()
+        new_layout = QGridLayout()
+        self.setLayout(new_layout)
+
+        # auto complete options
+        names = ["correlation table", "stock returns", "dividends", "financials", "balance sheet", "cash flow",
+                 "recommendations", "major holders", "institutional holders", "graphics"]
+        completer = QCompleter(names)
+
+        lineedit_label = QLabel("Command")
+        self.lineedit = QLineEdit()
+        self.lineedit.setCompleter(completer)
+        new_layout.addWidget(self.lineedit, 0, 0)
+
+        # Create a QPushButton for login
+        submit_button = QPushButton("Submit")
+        submit_button.clicked.connect(self.submit)
+
+        # Create a QLabel widget to display chat messages
+        self.chat_label = QLabel()
+        self.chat_label.setWordWrap(True)  # Wrap long messages
+        layout.addWidget(self.chat_label)
+
+        # Create a QLineEdit for typing new messages
+        self.message_input = QLineEdit()
+        self.message_input.setPlaceholderText("Type your message here...and press Enter key.")
+        self.message_input.returnPressed.connect(self.send_message)
+        layout.addWidget(self.message_input)
+
+        # Add widgets to the form layout
+        layout.addWidget(self.lineedit)
+        layout.addWidget(submit_button)
+
+        # Set the layout for the central widget
+        central_widget.setLayout(layout)
+
+        # Initialize chat history
+        self.chat_history = []
+
+        # Scroll Area Properties
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(central_widget)
+
+    def submit(self):
+        self.cmd = self.lineedit.text()
+        self.w = Parametres(self.cmd)
+        self.w.show()
+
+    def send_message(self):
+        # Get the message from the input field
+        message = self.username + ': ' + self.message_input.text()
+
+# TODO: отправить сообщение серверу
+        # Append the message to the chat history
+        self.chat_history.append(message)
+
+        # Update the chat display
+        self.update_chat_display()
+
+        # Clear the input field
+        self.message_input.clear()
+
+# TODO: отображать сообщения от других клиентов
+    def update_chat_display(self):
+        # Display the chat history in the QLabel
+        chat_text = "\n".join(self.chat_history)
+        self.chat_label.setText(chat_text)
+
 
 def main():
     """Start client."""
