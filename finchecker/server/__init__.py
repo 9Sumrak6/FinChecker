@@ -1,6 +1,23 @@
 import asyncio
 
 
+async def send_file(writer, uid, file):
+    writer.write(f"begin file {uid}\n".encode())
+    await writer.drain()
+
+    f = open(file, "rb")
+
+    while data := f.read():
+        writer.write(f"{uid} {len(data) // 1024 + (len(data) % 1024 > 0)} ".encode() + data)
+        await writer.drain()
+
+    await asyncio.sleep(0.1)
+
+    writer.write(f"end file {uid}\n".encode())
+    await writer.drain()
+
+    f.close()
+
 
 clients_names = set()
 clients_conns = dict()
@@ -44,7 +61,13 @@ async def chat(reader, writer):
                 if len(query) == 0:
                     writer.write("Command is incorrect.\n".encode())
                     continue
-                elif query[0] == 'pic':
+                elif query[0] == 'req':
+                    pass
+                elif query[0] == 'graphics':
+                    await send_file(writer, 0, "10.png")
+                elif query[0] == 'corr':
+                    pass
+                elif query[0] == 'sayall':
                     pass
                 elif query[0] == 'EOF':
                     send.cancel()
@@ -77,6 +100,7 @@ async def run_server():
     server = await asyncio.start_server(chat, '0.0.0.0', 1337)
     async with server:
         await server.serve_forever()
+
 
 def main():
 	asyncio.run(run_server())

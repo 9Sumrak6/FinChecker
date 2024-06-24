@@ -59,7 +59,22 @@ def recieve(conn, client):
                 files[int(data[2])].close()
                 del files[int(data[2])]
         else:
-            pass
+            i1, i2 = 0, 0
+            for i in range(100):
+                if new[i] == 32 and i1 == 0:
+                    i1 = i
+                elif new[i] == 32 and i2 == 0:
+                    i2 = i
+                    break
+
+            file_num = int(new[:i1].decode())
+            num = int(new[i1+1:i2].decode()) - 1
+
+            files[file_num].write(new[i2 + 1:])
+
+            for i in range(num):
+                new = conn.recv(1024)
+                files[file_num].write(new)
 
         # print(f"\n{data.strip()}\n{cmd.prompt}{readline.get_line_buffer()}", end='', flush=True)
 
