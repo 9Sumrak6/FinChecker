@@ -99,20 +99,11 @@ class Parametres(QWidget):
         self.end_date = ''
         self.filename = ''
 
-        layout = QVBoxLayout()
-        self.label = QLabel("Another Window")
-        layout.addWidget(self.label)
-        self.setLayout(layout)
-
         # Set the window properties (title and initial size)
-        #self.setWindowTitle("Login Form")
-        #self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
+        self.setWindowTitle("Parametres for " + cmd)
+        self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
 
-        '''# Create a central widget for the main window
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)'''
-
-        '''layout = QGridLayout()
+        layout = QGridLayout()
         self.setLayout(layout)
 
         # auto complete options
@@ -120,15 +111,12 @@ class Parametres(QWidget):
         completer = QCompleter(names)
 
         # create line edit and add auto complete
-        lineedit_label = QLabel("Command")
+        lineedit_label = QLabel("Company")
         self.lineedit = QLineEdit()
         self.lineedit.setCompleter(completer)
-        layout.addWidget(self.lineedit, 0, 0)'''
+        layout.addWidget(lineedit_label, 0, 0)
+        layout.addWidget(self.lineedit, 0, 1)
 
-        # Create a QFormLayout to arrange the widgets
-        '''form_layout = QFormLayout()
-
-        # Create QLabel and QLineEdit widgets for username
         start_date_label = QLabel("Start date:")
         self.start_date_field = QLineEdit()
         self.start_date_field.setPlaceholderText("Date format: YYYY-MM-DD")
@@ -138,19 +126,16 @@ class Parametres(QWidget):
         filename_label = QLabel("File name:")
         self.filename_field = QLineEdit()
 
-        # Create a QPushButton for login
+        layout.addWidget(start_date_label, 1, 0)
+        layout.addWidget(self.start_date_field, 1, 1)
+        layout.addWidget(end_date_label, 2, 0)
+        layout.addWidget(self.end_date_field, 2, 1)
+        layout.addWidget(filename_label, 3, 0)
+        layout.addWidget(self.filename_field, 3, 1)
+
         submit_button = QPushButton("Submit")
         submit_button.clicked.connect(self.submit)
-
-        # Add widgets to the form layout
-        #form_layout.addRow(lineedit_label, self.lineedit)
-        form_layout.addRow(start_date_label, self.start_date_field)
-        form_layout.addRow(end_date_label, self.end_date_field)
-        form_layout.addRow(filename_label, self.filename_field)
-        form_layout.addRow(submit_button)
-
-        # Set the layout for the central widget
-        central_widget.setLayout(form_layout)
+        layout.addWidget(submit_button)
 
     def submit(self):
         # Retrieve the username and password entered by the user
@@ -167,7 +152,7 @@ class Parametres(QWidget):
             self.end_date = end_date
             QMessageBox.information(self, "Login Successful", "Welcome, " + "!")
         else:
-            QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")'''
+            QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")
 
 class ChatApp(QMainWindow):
     def __init__(self, name):
