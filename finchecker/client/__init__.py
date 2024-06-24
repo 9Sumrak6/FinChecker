@@ -26,7 +26,7 @@ class Client(cmd.Cmd):
         new = args.split()
         Client.file_name[Client.uid] = new[0]
         Client.uid = (Client.uid + 1) % 1000
-        self.conn.sendall((f"graphics {Client.uid - 1} " + args + "\n").encode())
+        self.conn.sendall((f"graphics {Client.uid - 1}\n").encode())
 
     def do_corr(self, filename, args):
         file_name[uid] = filename

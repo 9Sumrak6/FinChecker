@@ -62,25 +62,54 @@ async def chat(reader, writer):
                     writer.write("Command is incorrect.\n".encode())
                     continue
                 elif query[0] == 'corr':
+                    uid = query[1]
+                    ticker = query[2]
+                    start_date = query[3]
+                    end_date = query[4]
                     pass
                 elif query[0] == 'stock':
+                    uid = query[1]
+                    ticker = query[2]
+                    start_date = query[3]
+                    end_date = query[4]
                     pass
                 elif query[0] == 'dividends':
+                    uid = query[1]
+                    ticker = query[2]
+                    start_date = query[3]
+                    end_date = query[4]
+                    pass
+                elif query[0] == 'fin':
+                    uid = query[1]
+                    ticker = query[2]
                     pass
                 elif query[0] == 'balance':
+                    uid = query[1]
+                    ticker = query[2]
                     pass
                 elif query[0] == 'cash':
+                    uid = query[1]
+                    ticker = query[2]
                     pass
                 elif query[0] == 'recom':
+                    uid = query[1]
+                    ticker = query[2]
                     pass
-                elif query[0] == 'sust':
-                    pass
+                # elif query[0] == 'sust':
+                #     uid = query[1]
+                #     ticker = query[2]
+                #     pass
                 elif query[0] == 'm_hold':
+                    uid = query[1]
+                    ticker = query[2]
                     pass
                 elif query[0] == 'i_hold':
+                    uid = query[1]
+                    ticker = query[2]
                     pass
                 elif query[0] == 'graphics':
-                    await send_file(writer, 0, "1.txt")
+                    uid = query[1]
+                    await send_file(writer, uid, "1.txt")
                 elif query[0] == 'sayall':
                     for i in clients_names:
                         if i == name:
