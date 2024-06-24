@@ -51,7 +51,13 @@ def recieve(conn, client):
         cmd = new[:5].decode()
 
         if cmd == 'begin' or cmd[:3] == 'end':
-            pass
+            data = new.decode().split()
+
+            if data[0] == 'begin' and data[1] == 'file':
+                files[int(data[2])] = open(client.file_name[int(data[2])], "wb")
+            elif data[0] == "end" and data[1] == "file":
+                files[int(data[2])].close()
+                del files[int(data[2])]
         else:
             pass
 
