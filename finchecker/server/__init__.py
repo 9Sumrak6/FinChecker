@@ -2,10 +2,11 @@ import asyncio
 
 
 async def send_file(writer, uid, file):
-    writer.write(f"begin file {uid}\n".encode())
+    writer.write(f"beg file {uid}\n".encode())
     await writer.drain()
 
     f = open(file, "rb")
+    await asyncio.sleep(0.01)
 
     while data := f.read():
         writer.write(f"{uid} {len(data) // 1024 + (len(data) % 1024 > 0)} ".encode() + data)
@@ -32,16 +33,17 @@ async def chat(reader, writer):
     name = await reader.readline()
     name = name.decode()[:-1]
 
-    if name in clients_names:
+    while name in clients_names:
         writer.write("off".encode())
         await writer.drain()
 
-        return
-    else:
-        clients_names.add(name)
+        name = await reader.readline()
+        name = name.decode()[:-1]
 
-        writer.write("in".encode())
-        await writer.drain()
+    clients_names.add(name)
+
+    writer.write("in".encode())
+    await writer.drain()
 
     clients_conns[name] = asyncio.Queue()
 
@@ -78,11 +80,13 @@ async def chat(reader, writer):
                 elif query[0] == 'i_hold':
                     pass
                 elif query[0] == 'graphics':
-                    await send_file(writer, 0, "10.png")
+                    await send_file(writer, 0, "1.txt")
                 elif query[0] == 'sayall':
                     for i in clients_names:
-                        print(i)
-                        await clients_conns[i].put('sayal ' + name + ": " + " ".join(query[1:]))
+                        if i == name:
+                            continue
+
+                        await clients_conns[i].put('say ' + " ".join(query[1:]))
                 elif query[0] == 'EOF':
                     send.cancel()
                     receive.cancel()
