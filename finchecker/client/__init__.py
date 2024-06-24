@@ -4,6 +4,31 @@ import cmd
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFormLayout, QLabel, QLineEdit, QPushButton, \
     QMessageBox, QVBoxLayout, QScrollArea, QGridLayout, QCompleter
 from PyQt5.QtCore import Qt
+from datetime import date
+
+
+def check_data(inp: str) -> bool:
+    if len(inp) != 10:
+        return False
+    inp = inp.split('-')
+    if len(inp) != 3:
+        return False
+    if not inp[0].isdigit() or not inp[1].isdigit() or not inp[2].isdigit():
+        return False
+    current_date = str(date.today()).split('-')
+    year, month, day = int(inp[0]), int(inp[1]), int(inp[2])
+    curr_y, curr_m, curr_d = int(current_date[0]), int(current_date[1]), int(current_date[2])
+    if year < 1900 or year > curr_y:
+        return False
+    if month < 0 or month > 12 or year == curr_y and month > curr_m:
+        return False
+    if day < 0 or day > 31 or year == curr_y and month == curr_m and day > curr_d:
+        return False
+    if month == 2 and (day > 29 or abs(year - 2000) % 4 != 0 and day == 29):
+        return False
+    if month in [4, 6, 9, 11] and day == 31:
+        return False
+    return True
 
 
 class Mood(cmd.Cmd):
@@ -92,12 +117,15 @@ class LoginFormApp(QMainWindow):
             QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")
 
 
+
+
 class Parametres(QWidget):
     def __init__(self, cmd):
         super().__init__()
         self.start_date = ''
         self.end_date = ''
         self.filename = ''
+        self.cmd = cmd
 
         only_ticker = ["financials", "balance sheet", "cash flow", "recommendations", "major holders",
                        "institutional holders", "graphics"]
@@ -146,18 +174,18 @@ class Parametres(QWidget):
         # Retrieve the username and password entered by the user
         start_date = self.start_date_field.text()
         end_date = self.end_date_field.text()
+        self.filename = self.filename_field.text()
 
-        # TODO: обработка ошибок формата даты
-        correct_dates = ['a']
-
+        # TODO: check tickers and maybe filename
         # TODO: send request to server
         # Check if the username and password are valid (for demonstration purposes)
-        if start_date in correct_dates and end_date in correct_dates:
+        if check_data(start_date) and check_data(end_date):
             self.start_date = start_date
             self.end_date = end_date
-            QMessageBox.information(self, "Login Successful", "Welcome, " + "!")
+            QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
         else:
-            QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")
+            QMessageBox.warning(self, "Fail", "Incorrect date format. Please try again.")
+
 
 class ChatApp(QMainWindow):
     def __init__(self, name):
