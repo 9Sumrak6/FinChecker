@@ -79,7 +79,7 @@ class LoginFormApp(QMainWindow):
         username = self.username_field.text()
 
 # TODO: get reserved usernames from server
-        usernames_in_use = []
+        usernames_in_use = ['a']
 
 # TODO: send new username to server
         # Check if the username and password are valid (for demonstration purposes)
@@ -153,6 +153,77 @@ class ChatApp(QMainWindow):
         chat_text = "\n".join(self.chat_history)
         self.chat_label.setText(chat_text)
 
+class ButtonsApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.start_date = ''
+        self.end_date = ''
+        self.filename = ''
+
+        # Set the window properties (title and initial size)
+        #self.setWindowTitle("Login Form")
+        self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
+
+        # Create a central widget for the main window
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+
+        layout = QGridLayout()
+        self.setLayout(layout)
+
+        # auto complete options
+        names = ["correlation table", "stock returns", "dividends", "financials", "balance sheet", "cash flow", "recommendations", "major holders", "institutional holders", "graphics"]
+        completer = QCompleter(names)
+
+        # create line edit and add auto complete
+        lineedit_label = QLabel("Command")
+        self.lineedit = QLineEdit()
+        self.lineedit.setCompleter(completer)
+        layout.addWidget(self.lineedit, 0, 0)
+
+        # Create a QFormLayout to arrange the widgets
+        form_layout = QFormLayout()
+
+        # Create QLabel and QLineEdit widgets for username
+        start_date_label = QLabel("Start date:")
+        self.start_date_field = QLineEdit()
+        self.start_date_field.setPlaceholderText("Date format: YYYY-MM-DD")
+        end_date_label = QLabel("End date:")
+        self.end_date_field = QLineEdit()
+        self.end_date_field.setPlaceholderText("Date format: YYYY-MM-DD")
+        filename_label = QLabel("File name:")
+        self.filename_field = QLineEdit()
+
+        # Create a QPushButton for login
+        submit_button = QPushButton("Submit")
+        submit_button.clicked.connect(self.submit)
+
+        # Add widgets to the form layout
+        form_layout.addRow(lineedit_label, self.lineedit)
+        form_layout.addRow(start_date_label, self.start_date_field)
+        form_layout.addRow(end_date_label, self.end_date_field)
+        form_layout.addRow(filename_label, self.filename_field)
+        form_layout.addRow(submit_button)
+
+        # Set the layout for the central widget
+        central_widget.setLayout(form_layout)
+
+    def submit(self):
+        # Retrieve the username and password entered by the user
+        start_date = self.start_date_field.text()
+        end_date = self.end_date_field.text()
+
+        # TODO: обработка ошибок формата даты
+        correct_dates = ['a']
+
+        # TODO: send request to server
+        # Check if the username and password are valid (for demonstration purposes)
+        if start_date in correct_dates and end_date in correct_dates:
+            self.start_date = start_date
+            self.end_date = end_date
+            QMessageBox.information(self, "Login Successful", "Welcome, " + "!")
+        else:
+            QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")
 
 def main():
     """Start client."""
