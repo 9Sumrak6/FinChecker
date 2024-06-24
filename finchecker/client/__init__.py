@@ -99,6 +99,10 @@ class Parametres(QWidget):
         self.end_date = ''
         self.filename = ''
 
+        only_ticker = ["financials", "balance sheet", "cash flow", "recommendations", "major holders",
+                       "institutional holders", "graphics"]
+        other = ["correlation table", "stock returns", "dividends"]
+
         # Set the window properties (title and initial size)
         self.setWindowTitle("Parametres for " + cmd)
         self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
@@ -126,10 +130,11 @@ class Parametres(QWidget):
         filename_label = QLabel("File name:")
         self.filename_field = QLineEdit()
 
-        layout.addWidget(start_date_label, 1, 0)
-        layout.addWidget(self.start_date_field, 1, 1)
-        layout.addWidget(end_date_label, 2, 0)
-        layout.addWidget(self.end_date_field, 2, 1)
+        if cmd in other:
+            layout.addWidget(start_date_label, 1, 0)
+            layout.addWidget(self.start_date_field, 1, 1)
+            layout.addWidget(end_date_label, 2, 0)
+            layout.addWidget(self.end_date_field, 2, 1)
         layout.addWidget(filename_label, 3, 0)
         layout.addWidget(self.filename_field, 3, 1)
 
