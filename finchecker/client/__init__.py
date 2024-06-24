@@ -97,9 +97,10 @@ def main():
         s.connect((host, port))
 
         s.sendall((name + '\n').encode())
-        s.recv(1024)
+        ans = s.recv(1024).decode()
 
-        print("OK")
+        if ans == 'off':
+            sys.exit(0)
 
         client = Client(s)
 

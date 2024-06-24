@@ -28,27 +28,26 @@ async def chat(reader, writer):
     global clients_names, clients_conns, clients_locales
 
     me = "{}:{}".format(*writer.get_extra_info('peername'))
-    print(me)
 
     name = await reader.readline()
     name = name.decode()[:-1]
 
-    print(name)
-
     if name in clients_names:
-        writer.write("off\n".encode())
+        writer.write("off".encode())
+        await writer.drain()
+
         return
     else:
         clients_names.add(name)
 
-        writer.write("in\n".encode())
+        writer.write("in".encode())
+        await writer.drain()
 
     clients_conns[name] = asyncio.Queue()
 
     send = asyncio.create_task(reader.readline())
     receive = asyncio.create_task(clients_conns[name].get())
 
-    print("OK")
 
     while not reader.at_eof():
         done, pending = await asyncio.wait([send, receive], return_when=asyncio.FIRST_COMPLETED)
@@ -56,7 +55,7 @@ async def chat(reader, writer):
         for q in done:
             if q is send:
                 query = q.result().decode().strip().split()
-                print("----------", query)
+                print(query)
 
                 if len(query) == 0:
                     writer.write("Command is incorrect.\n".encode())
@@ -81,7 +80,6 @@ async def chat(reader, writer):
                     print("skip")
                 send = asyncio.create_task(reader.readline())
             elif q in receive:
-                print(1)
                 receive = asyncio.create_task(clients_queue[name].get())
                 writer.write("{}\n".format(q.result()).encode())
                 await writer.drain()
