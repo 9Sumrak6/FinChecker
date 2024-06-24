@@ -40,6 +40,7 @@ class Client(cmd.Cmd):
         """End cmd activity."""
         return True
 
+
 def recieve(conn, client):
     """Recieve the messages from server in another thread."""
     files = dict()
@@ -49,8 +50,10 @@ def recieve(conn, client):
 
         new = conn.recv(1024)
         cmd = new[:5].decode()
-
-        if cmd == 'begin' or cmd[:3] == 'end':
+        print(cmd)
+        if cmd == 'sayal':
+            print(new.decode())
+        elif cmd == 'begin' or cmd[:3] == 'end':
             data = new.decode().split()
 
             if data[0] == 'begin' and data[1] == 'file':

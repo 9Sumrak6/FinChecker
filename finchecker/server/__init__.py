@@ -48,7 +48,6 @@ async def chat(reader, writer):
     send = asyncio.create_task(reader.readline())
     receive = asyncio.create_task(clients_conns[name].get())
 
-
     while not reader.at_eof():
         done, pending = await asyncio.wait([send, receive], return_when=asyncio.FIRST_COMPLETED)
 
@@ -60,14 +59,30 @@ async def chat(reader, writer):
                 if len(query) == 0:
                     writer.write("Command is incorrect.\n".encode())
                     continue
-                elif query[0] == 'req':
+                elif query[0] == 'corr':
+                    pass
+                elif query[0] == 'stock':
+                    pass
+                elif query[0] == 'dividends':
+                    pass
+                elif query[0] == 'balance':
+                    pass
+                elif query[0] == 'cash':
+                    pass
+                elif query[0] == 'recom':
+                    pass
+                elif query[0] == 'sust':
+                    pass
+                elif query[0] == 'm_hold':
+                    pass
+                elif query[0] == 'i_hold':
                     pass
                 elif query[0] == 'graphics':
                     await send_file(writer, 0, "10.png")
-                elif query[0] == 'corr':
-                    pass
                 elif query[0] == 'sayall':
-                    pass
+                    for i in clients_names:
+                        print(i)
+                        await clients_conns[i].put('sayal ' + name + ": " + " ".join(query[1:]))
                 elif query[0] == 'EOF':
                     send.cancel()
                     receive.cancel()
@@ -79,8 +94,8 @@ async def chat(reader, writer):
                 else:
                     print("skip")
                 send = asyncio.create_task(reader.readline())
-            elif q in receive:
-                receive = asyncio.create_task(clients_queue[name].get())
+            elif q is receive:
+                receive = asyncio.create_task(clients_conns[name].get())
                 writer.write("{}\n".format(q.result()).encode())
                 await writer.drain()
 
