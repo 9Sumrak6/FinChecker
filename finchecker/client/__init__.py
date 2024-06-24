@@ -1,17 +1,36 @@
 import socket
 import sys
 import cmd
+import threading
 
-class Mood(cmd.Cmd):
-    """Class Mood shows the command line, autocomplete attack command and send commands to server."""
 
+class Client(cmd.Cmd):
     prompt = ":->"
+
+    uid = 0
+    file_name = dict()
 
     def __init__(self, conn, stdin=sys.stdin):
         """Initialize variables."""
         super().__init__(stdin=stdin)
 
         self.conn = conn
+
+    def do_req(self, filename, args):
+        file_name[uid] = filename
+        uid = (uid + 1) % 1000
+        self.conn.sendall((f"req {uid - 1} " + args + "\n").encode())
+
+    def do_graphics(self, args):
+        new = args.split()
+        Client.file_name[Client.uid] = new[0]
+        Client.uid = (Client.uid + 1) % 1000
+        self.conn.sendall((f"graphics {Client.uid - 1} " + args + "\n").encode())
+
+    def do_corr(self, filename, args):
+        file_name[uid] = filename
+        uid = (uid + 1) % 1000
+        self.conn.sendall((f"corr {uid - 1} " + args + "\n").encode())
 
     def do_sayall(self, args):
         """Send message to all players."""
@@ -21,24 +40,23 @@ class Mood(cmd.Cmd):
         """End cmd activity."""
         return True
 
-def recieve(conn):
+def recieve(conn, client):
     """Recieve the messages from server in another thread."""
+    files = dict()
+
     while conn is not None:
         data = ""
+
         new = conn.recv(1024)
-        new = new.split()
-        if new[0] == 'begin':
-            if new[1] == 'send_img':
-                pass
-        elif new[0] == 'end':
-            if new[1] == 'send_img':
-                pass
-        while len(new := conn.recv(1024)) == 1024:
-            data += new.decode()
+        cmd = new[:5].decode()
 
-        data += new.decode()
+        if cmd == 'begin' or cmd[:3] == 'end':
+            pass
+        else:
+            pass
 
-        print(f"\n{data.strip()}\n{cmd.prompt}{readline.get_line_buffer()}", end='', flush=True)
+        # print(f"\n{data.strip()}\n{cmd.prompt}{readline.get_line_buffer()}", end='', flush=True)
+
 
 def main():
     """Start client."""
@@ -56,8 +74,16 @@ def main():
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
+
         s.sendall((name + '\n').encode())
         s.recv(1024)
+
         print("OK")
-        mood = Mood(s)
-        mood.cmdloop()
+
+        client = Client(s)
+
+        rec = threading.Thread(target=recieve, args=(s, client))
+        rec.daemon = True
+        rec.start()
+
+        client.cmdloop()
