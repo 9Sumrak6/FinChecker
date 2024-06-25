@@ -142,6 +142,19 @@ def get_balance_sheet(ticker, filename):
     balance_sheet.to_csv(filename)
     return balance_sheet
 
+def get_cash_flow(ticker, filename):
+    """
+    Получить данные о движении денежных средств компании и сохранить в CSV.
+
+    :param ticker: тикер акции
+    :param filename: имя файла для сохранения
+    :return: отчет о движении денежных средств в формате DataFrame
+    """
+    stock = yf.Ticker(ticker)
+    cash_flow = stock.cashflow
+    cash_flow.to_csv(filename)
+    return cash_flow
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -223,7 +236,8 @@ async def chat(reader, writer):
                 elif query[0] == 'cash':
                     uid = query[1]
                     ticker = query[2]
-                    pass
+                    get_cash_flow(ticker, 'aapl_cash_flow.csv')
+                    send_file(writer, uid, 'aapl_cash_flow.csv')
                 elif query[0] == 'recom':
                     uid = query[1]
                     ticker = query[2]
