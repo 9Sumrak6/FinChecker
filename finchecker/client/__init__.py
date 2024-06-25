@@ -5,35 +5,33 @@ import sys
 import cmd
 import threading
 
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFormLayout, QLabel, QLineEdit, QPushButton, \
     QMessageBox, QVBoxLayout, QScrollArea, QGridLayout, QCompleter
 from PyQt5.QtCore import Qt
 from datetime import date
 
 
-def check_data(inp: str) -> bool:
-    if len(inp) != 10:
-        return False
-    inp = inp.split('-')
-    if len(inp) != 3:
-        return False
-    if not inp[0].isdigit() or not inp[1].isdigit() or not inp[2].isdigit():
-        return False
-    current_date = str(date.today()).split('-')
-    year, month, day = int(inp[0]), int(inp[1]), int(inp[2])
-    curr_y, curr_m, curr_d = int(current_date[0]), int(current_date[1]), int(current_date[2])
-    if year < 1900 or year > curr_y:
-        return False
-    if month < 0 or month > 12 or year == curr_y and month > curr_m:
-        return False
-    if day < 0 or day > 31 or year == curr_y and month == curr_m and day > curr_d:
-        return False
-    if month == 2 and (day > 29 or abs(year - 2000) % 4 != 0 and day == 29):
-        return False
-    if month in [4, 6, 9, 11] and day == 31:
-        return False
-    return True
+def update_stat(filename, tree, root, tag):
+    # tree = ET.parse(filename)
+    # root = tree.getroot()
 
+    for cmd in root.findall(tag):
+        cmd.text = str(int(cmd.text) + 1)
+        cmd.set('updated', 'yes')
+
+    tree.write(filename)
+
+
+def reset_stat(filename, tree, root, tag, clear=False):
+    for cmd in root:
+        if clear:
+            cmd.text = "0"
+        cmd.set('updated', 'no')
+
+    tree.write(filename)
 
 class Client(cmd.Cmd):
     """Class for sending requests to server with ability of using cmd instead of GUI."""
@@ -43,6 +41,20 @@ class Client(cmd.Cmd):
     uid = 0
     file_name = dict()
 
+    full_name = {
+        'corr' : 'correlation_table',
+        'stock' : 'stock_returns',
+        'dividends' : 'dividends',
+        'fin' : 'financials',
+        'balance' : 'balance_sheet',
+        'cash' : 'cash_flow',
+        'recom' : 'recommendations',
+        'm_hold' : 'major_holders',
+        'i_hold' : 'institutional_holders',
+        'graphics' : 'graphics',
+        'sayall' : 'sayall'
+    }
+
     def __init__(self, conn, stdin=sys.stdin):
         """
         Initialize variables.
@@ -50,8 +62,15 @@ class Client(cmd.Cmd):
         :param conn: socket to server
         :param stdin: input stream
         """
+
         super().__init__(stdin=stdin)
+
         self.conn = conn
+
+        self.cur_path_xml = str(Path(__file__).parent.resolve()) + '/stat.xml'
+
+        self.tree = ET.parse('finchecker/client/stat.xml')
+        self.root = self.tree.getroot()
 
     def do_req(self, cmd, filename, args=''):
         """
@@ -63,6 +82,9 @@ class Client(cmd.Cmd):
         """
         Client.file_name[Client.uid] = filename
         Client.uid = (Client.uid + 1) % 1000
+
+        update_stat(self.cur_path_xml, self.tree, self.root, Client.full_name[cmd])
+
         self.conn.sendall((f"{cmd} {Client.uid - 1} " + args + "\n").encode())
 
     # def do_graphics(self, args):
@@ -77,10 +99,12 @@ class Client(cmd.Cmd):
 
         :param msg: message
         """
+        update_stat(self.cur_path_xml, self.tree, self.root, "sayall")
         self.conn.sendall(("sayall " + msg + "\n").encode())
 
     def do_EOF(self, args):
         """End client activity."""
+        reset_stat(self.cur_path_xml, self.tree, self.root, False)
         return True
 
 
@@ -131,6 +155,30 @@ def recieve(conn, client, window):
                 files[file_num].write(new)
 
         # print(f"\n{data.strip()}\n{cmd.prompt}{readline.get_line_buffer()}", end='', flush=True)
+
+
+def check_data(inp: str) -> bool:
+    if len(inp) != 10:
+        return False
+    inp = inp.split('-')
+    if len(inp) != 3:
+        return False
+    if not inp[0].isdigit() or not inp[1].isdigit() or not inp[2].isdigit():
+        return False
+    current_date = str(date.today()).split('-')
+    year, month, day = int(inp[0]), int(inp[1]), int(inp[2])
+    curr_y, curr_m, curr_d = int(current_date[0]), int(current_date[1]), int(current_date[2])
+    if year < 1900 or year > curr_y:
+        return False
+    if month < 0 or month > 12 or year == curr_y and month > curr_m:
+        return False
+    if day < 0 or day > 31 or year == curr_y and month == curr_m and day > curr_d:
+        return False
+    if month == 2 and (day > 29 or abs(year - 2000) % 4 != 0 and day == 29):
+        return False
+    if month in [4, 6, 9, 11] and day == 31:
+        return False
+    return True
 
 
 class LoginFormApp(QMainWindow):
@@ -347,6 +395,7 @@ def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
 
+        client = Client(s)
         app = QApplication(sys.argv)
 
         window = LoginFormApp(s)
@@ -357,7 +406,6 @@ def main():
         if name == '':
             return
 
-        client = Client(s)
         window = ChatApp(name, client)
 
         rec = threading.Thread(target=recieve, args=(s, client, window))
