@@ -129,6 +129,19 @@ def get_financials(ticker, filename):
     financials.to_csv(filename)
     return financials
 
+def get_balance_sheet(ticker, filename):
+    """
+    Получить балансовый отчет компании и сохранить в CSV.
+
+    :param ticker: тикер акции
+    :param filename: имя файла для сохранения
+    :return: балансовый отчет в формате DataFrame
+    """
+    stock = yf.Ticker(ticker)
+    balance_sheet = stock.balance_sheet
+    balance_sheet.to_csv(filename)
+    return balance_sheet
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -205,7 +218,8 @@ async def chat(reader, writer):
                 elif query[0] == 'balance':
                     uid = query[1]
                     ticker = query[2]
-                    pass
+                    get_balance_sheet(ticker, 'aapl_balance_sheet.csv')
+                    send_file(writer, uid, 'aapl_balance_sheet.csv')
                 elif query[0] == 'cash':
                     uid = query[1]
                     ticker = query[2]
