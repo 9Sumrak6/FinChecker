@@ -168,6 +168,19 @@ def get_recommendations(ticker, filename):
     recommendations.to_csv(filename)
     return recommendations
 
+def get_major_holders(ticker, filename):
+    """
+    Получить данные о крупнейших держателях акций и сохранить в CSV.
+
+    :param ticker: тикер акции
+    :param filename: имя файла для сохранения
+    :return: данные о крупнейших держателях в формате DataFrame
+    """
+    stock = yf.Ticker(ticker)
+    major_holders = stock.major_holders
+    major_holders.to_csv(filename)
+    return major_holders
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -263,7 +276,8 @@ async def chat(reader, writer):
                 elif query[0] == 'm_hold':
                     uid = query[1]
                     ticker = query[2]
-                    pass
+                    get_major_holders(ticker, 'aapl_major_holders.csv')
+                    send_file(writer, uid, 'aapl_major_holders.csv')
                 elif query[0] == 'i_hold':
                     uid = query[1]
                     ticker = query[2]
