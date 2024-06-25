@@ -116,6 +116,19 @@ def plot_dividends(dividends, ticker, filename):
     plt.savefig(filename, format='jpg')
     plt.close()
 
+def get_financials(ticker, filename):
+    """
+    Получить финансовые отчеты компании и сохранить в CSV.
+
+    :param ticker: тикер акции
+    :param filename: имя файла для сохранения
+    :return: финансовые отчеты в формате DataFrame
+    """
+    stock = yf.Ticker(ticker)
+    financials = stock.financials
+    financials.to_csv(filename)
+    return financials
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -187,7 +200,8 @@ async def chat(reader, writer):
                 elif query[0] == 'fin':
                     uid = query[1]
                     ticker = query[2]
-                    pass
+                    get_financials(ticker, 'aapl_financials.csv')
+                    send_file(writer, uid, 'aapl_financials.csv')
                 elif query[0] == 'balance':
                     uid = query[1]
                     ticker = query[2]
