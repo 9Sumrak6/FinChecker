@@ -54,6 +54,21 @@ def plot_correlation_table(correlation_table, filename):
     plt.savefig(filename, format='jpg')
     plt.close()
 
+def get_stock_returns(ticker, start_date, end_date, filename):
+    """
+    Получить исторические данные о доходности акций и сохранить в CSV.
+
+    :param ticker: тикер акции
+    :param start_date: начальная дата в формате 'YYYY-MM-DD'
+    :param end_date: конечная дата в формате 'YYYY-MM-DD'
+    :param filename: имя файла для сохранения
+    :return: данные о доходности акций в формате DataFrame
+    """
+    data = yf.download(ticker, start=start_date, end=end_date)
+    data['Returns'] = data['Adj Close'].pct_change()
+    data[['Returns']].to_csv(filename)
+    return data[['Returns']]
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -109,7 +124,8 @@ async def chat(reader, writer):
                     ticker = query[2]
                     start_date = query[3]
                     end_date = query[4]
-                    pass
+                    returns = get_stock_returns(ticker, start_date, end_date, 'aapl_returns.csv')
+                    send_file(writer, uid, 'aapl_returns.csv')
                 elif query[0] == 'dividends':
                     uid = query[1]
                     ticker = query[2]
