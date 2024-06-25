@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 yfinance = "*"
 pyqt5 = "*"
+matplotlib = "*"
+seaborn = "*"
+scikit-learn = "*"
 
 [dev-packages]
 flake8 = "*"
