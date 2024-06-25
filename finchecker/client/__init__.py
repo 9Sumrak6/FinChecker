@@ -53,7 +53,8 @@ class Client(cmd.Cmd):
         'major holders': 'm_hold',
         'institutional holders': 'i_hold',
         'graphics': 'graphics',
-        'sayall': 'sayall'
+        'sayall': 'sayall',
+        'predict': 'predict'
     }
 
     def __init__(self, conn, stdin=sys.stdin):
@@ -237,6 +238,7 @@ class Parametres(QWidget):
         self.start_date = ''
         self.end_date = ''
         self.filename = ''
+        self.days = ''
         self.cmd = cmd
         self.client = client
         self.only_ticker = ["financials", "balance sheet", "cash flow", "recommendations", "major holders",
@@ -290,15 +292,23 @@ class Parametres(QWidget):
 
     def submit(self):
         # Retrieve the username and password entered by the user
-        if self.cmd in self.other:
+        if self.cmd in self.other or self.cmd in self.extra:
             start_date = self.start_date_field.text()
             end_date = self.end_date_field.text()
         self.filename = self.filename_field.text()
+        if self.cmd in self.extra:
+            days = self.days_field.text()
 
         # TODO: check tickers and maybe filename
         # TODO: send request to server
         # Check if the username and password are valid (for demonstration purposes)
-        if self.cmd not in self.other:
+        if self.cmd in self.extra:
+            self.start_date = start_date
+            self.end_date = end_date
+            self.days = days
+            self.client.do_req(self.cmd, self.filename, f"AMZN {self.start_date} {self.end_date} {self.days}")
+            QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
+        elif self.cmd not in self.other:
             self.client.do_req(self.cmd, self.filename, "AMZN")
             QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
         elif check_data(start_date) and check_data(end_date):
