@@ -100,6 +100,22 @@ def get_dividends(ticker, start_date, end_date, filename):
     dividends.to_csv(filename)
     return dividends
 
+def plot_dividends(dividends, ticker, filename):
+    """
+    Визуализация данных о дивидендах и сохранение в файл JPG.
+
+    :param dividends: данные о дивидендах в формате DataFrame
+    :param ticker: тикер акции
+    :param filename: имя файла для сохранения
+    """
+    plt.figure(figsize=(10, 6))
+    dividends.plot(kind='bar')
+    plt.title(f'{ticker} Dividends')
+    plt.xlabel('Date')
+    plt.ylabel('Dividend')
+    plt.savefig(filename, format='jpg')
+    plt.close()
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -166,6 +182,8 @@ async def chat(reader, writer):
                     end_date = query[4]
                     dividends = get_dividends(ticker, start_date, end_date, 'aapl_dividends.csv')
                     send_file(writer, uid, 'aapl_dividends.csv')
+                    plot_dividends(dividends, ticker, 'aapl_dividends.jpg')
+                    send_file(writer, uid, 'aapl_dividends.jpg')
                 elif query[0] == 'fin':
                     uid = query[1]
                     ticker = query[2]
