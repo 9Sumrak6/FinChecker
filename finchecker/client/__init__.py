@@ -82,6 +82,7 @@ def recieve(conn, client, window):
 
         # print(f"\n{data.strip()}\n{cmd.prompt}{readline.get_line_buffer()}", end='', flush=True)
 
+
 class LoginFormApp(QMainWindow):
     def __init__(self, socket):
         super().__init__()
