@@ -2,6 +2,7 @@ import socket
 import sys
 import cmd
 
+
 class Mood(cmd.Cmd):
     """Class Mood shows the command line, autocomplete attack command and send commands to server."""
 
@@ -21,6 +22,7 @@ class Mood(cmd.Cmd):
         """End cmd activity."""
         return True
 
+
 def recieve(conn):
     """Recieve the messages from server in another thread."""
     while conn is not None:
@@ -39,6 +41,7 @@ def recieve(conn):
         data += new.decode()
 
         print(f"\n{data.strip()}\n{cmd.prompt}{readline.get_line_buffer()}", end='', flush=True)
+
 
 def main():
     """Start client."""
