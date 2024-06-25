@@ -69,7 +69,7 @@ class Client(cmd.Cmd):
 
         self.cur_path_xml = str(Path(__file__).parent.resolve()) + '/stat.xml'
 
-        self.tree = ET.parse('finchecker/client/stat.xml')
+        self.tree = ET.parse(self.cur_path_xml)
         self.root = self.tree.getroot()
 
     def do_req(self, cmd, filename, args=''):
@@ -395,7 +395,6 @@ def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
 
-        client = Client(s)
         app = QApplication(sys.argv)
 
         window = LoginFormApp(s)
@@ -406,6 +405,7 @@ def main():
         if name == '':
             return
 
+        client = Client(s)
         window = ChatApp(name, client)
 
         rec = threading.Thread(target=recieve, args=(s, client, window))
