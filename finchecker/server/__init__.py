@@ -85,6 +85,21 @@ def plot_stock_returns(returns, ticker, filename):
     plt.savefig(filename, format='jpg')
     plt.close()
 
+def get_dividends(ticker, start_date, end_date, filename):
+    """
+    Получить данные о дивидендах акций и сохранить в CSV.
+
+    :param ticker: тикер акции
+    :param start_date: начальная дата в формате 'YYYY-MM-DD'
+    :param end_date: конечная дата в формате 'YYYY-MM-DD'
+    :param filename: имя файла для сохранения
+    :return: данные о дивидендах в формате DataFrame
+    """
+    stock = yf.Ticker(ticker)
+    dividends = stock.dividends[start_date:end_date]
+    dividends.to_csv(filename)
+    return dividends
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -149,7 +164,8 @@ async def chat(reader, writer):
                     ticker = query[2]
                     start_date = query[3]
                     end_date = query[4]
-                    pass
+                    dividends = get_dividends(ticker, start_date, end_date, 'aapl_dividends.csv')
+                    send_file(writer, uid, 'aapl_dividends.csv')
                 elif query[0] == 'fin':
                     uid = query[1]
                     ticker = query[2]
