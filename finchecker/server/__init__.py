@@ -41,6 +41,19 @@ def get_correlation_table(tickers, start_date, end_date, filename):
     correlation_table.to_csv(filename)
     return correlation_table
 
+def plot_correlation_table(correlation_table, filename):
+    """
+    Визуализация таблицы корреляции и сохранение в файл JPG.
+
+    :param correlation_table: таблица корреляции в формате DataFrame
+    :param filename: имя файла для сохранения
+    """
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(correlation_table, annot=True, cmap='coolwarm', linewidths=0.5)
+    plt.title('Correlation Table')
+    plt.savefig(filename, format='jpg')
+    plt.close()
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -87,7 +100,10 @@ async def chat(reader, writer):
                     ticker = query[2]
                     start_date = query[3]
                     end_date = query[4]
-                    correlation_table = get_correlation_table(tickers, start_date, end_date, 'correlation_table.csv')
+                    correlation_table = get_correlation_table(ticker, start_date, end_date, 'correlation_table.csv')
+                    send_file(writer, uid, 'correlation_table.csv')
+                    plot_correlation_table(correlation_table, 'correlation_table.jpg')
+                    send_file(writer, uid, 'correlation_table.jpg')
                 elif query[0] == 'stock':
                     uid = query[1]
                     ticker = query[2]
