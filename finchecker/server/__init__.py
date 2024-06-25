@@ -1,7 +1,16 @@
+"""Init file with all functionality for server."""
+
 import asyncio
 
 
 async def send_file(writer, uid, file):
+    """
+    Send chosen file.
+    
+    :param writer: output stream to socket
+    :param uid: uid of file on client
+    :param file: file being sent 
+    """
     writer.write(f"beg file {uid}\n".encode())
     await writer.drain()
 
@@ -26,6 +35,12 @@ clients_locales = dict()
 
 
 async def chat(reader, writer):
+    """
+    Async chat with users.
+    
+    :param reader: inpurt stream from socket
+    :param writer: output stream to socket
+    """
     global clients_names, clients_conns, clients_locales
 
     me = "{}:{}".format(*writer.get_extra_info('peername'))
@@ -146,4 +161,5 @@ async def run_server():
 
 
 def main():
+    """Start server activity."""
     asyncio.run(run_server())

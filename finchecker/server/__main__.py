@@ -1,3 +1,5 @@
+"""Main file for server."""
+
 from . import main
 
 if __name__ == "__main__":
