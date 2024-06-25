@@ -43,17 +43,17 @@ class Client(cmd.Cmd):
     file_name = dict()
 
     full_name = {
-        'corr' : 'correlation_table',
-        'stock' : 'stock_returns',
-        'dividends' : 'dividends',
-        'fin' : 'financials',
-        'balance' : 'balance_sheet',
-        'cash' : 'cash_flow',
-        'recom' : 'recommendations',
-        'm_hold' : 'major_holders',
-        'i_hold' : 'institutional_holders',
-        'graphics' : 'graphics',
-        'sayall' : 'sayall'
+        'correlation table': 'corr',
+        'stock returns': 'stock',
+        'dividends': 'dividends',
+        'financials': 'fin',
+        'balance sheet': 'balance',
+        'cash flow': 'cash',
+        'recommendations': 'recom',
+        'major holders': 'm_hold',
+        'institutional holders': 'i_hold',
+        'graphics': 'graphics',
+        'sayall': 'sayall'
     }
 
     def __init__(self, conn, stdin=sys.stdin):
@@ -233,16 +233,16 @@ class LoginFormApp(QMainWindow):
 
 
 class Parametres(QWidget):
-    def __init__(self, cmd):
+    def __init__(self, cmd, client):
         super().__init__()
         self.start_date = ''
         self.end_date = ''
         self.filename = ''
         self.cmd = cmd
-
-        only_ticker = ["financials", "balance sheet", "cash flow", "recommendations", "major holders",
+        self.client = client
+        self.only_ticker = ["financials", "balance sheet", "cash flow", "recommendations", "major holders",
                        "institutional holders", "graphics"]
-        other = ["correlation table", "stock returns", "dividends"]
+        self.other = ["correlation table", "stock returns", "dividends"]
 
         # Set the window properties (title and initial size)
         self.setWindowTitle("Parametres for " + cmd)
@@ -271,7 +271,7 @@ class Parametres(QWidget):
         filename_label = QLabel("File name:")
         self.filename_field = QLineEdit()
 
-        if cmd in other:
+        if cmd in self.other:
             layout.addWidget(start_date_label, 1, 0)
             layout.addWidget(self.start_date_field, 1, 1)
             layout.addWidget(end_date_label, 2, 0)
@@ -285,16 +285,21 @@ class Parametres(QWidget):
 
     def submit(self):
         # Retrieve the username and password entered by the user
-        start_date = self.start_date_field.text()
-        end_date = self.end_date_field.text()
+        if cmd in self.other:
+            start_date = self.start_date_field.text()
+            end_date = self.end_date_field.text()
         self.filename = self.filename_field.text()
 
         # TODO: check tickers and maybe filename
         # TODO: send request to server
         # Check if the username and password are valid (for demonstration purposes)
-        if check_data(start_date) and check_data(end_date):
+        if cmd not in self.other:
+            self.client.do_req(self.cmd, self.filename, "google")
+            QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
+        elif check_data(start_date) and check_data(end_date):
             self.start_date = start_date
             self.end_date = end_date
+            self.client.do_req(self.cmd, self.filename, f"google {self.start_date} {self.end_date}")
             QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
         else:
             QMessageBox.warning(self, "Fail", "Incorrect date format. Please try again.")
@@ -366,7 +371,7 @@ class ChatApp(QMainWindow):
 
     def submit(self):
         self.cmd = self.lineedit.text()
-        self.w = Parametres(self.cmd)
+        self.w = Parametres(self.cmd, self.client)
         self.w.show()
 
     def send_message(self):
