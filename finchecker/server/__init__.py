@@ -155,6 +155,19 @@ def get_cash_flow(ticker, filename):
     cash_flow.to_csv(filename)
     return cash_flow
 
+def get_recommendations(ticker, filename):
+    """
+    Получить рекомендации аналитиков по акциям и сохранить в CSV.
+
+    :param ticker: тикер акции
+    :param filename: имя файла для сохранения
+    :return: данные о рекомендациях в формате DataFrame
+    """
+    stock = yf.Ticker(ticker)
+    recommendations = stock.recommendations
+    recommendations.to_csv(filename)
+    return recommendations
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -241,7 +254,8 @@ async def chat(reader, writer):
                 elif query[0] == 'recom':
                     uid = query[1]
                     ticker = query[2]
-                    pass
+                    get_recommendations(ticker, 'aapl_recommendations.csv')
+                    send_file(writer, uid, 'aapl_recommendations.csv')
                 # elif query[0] == 'sust':
                 #     uid = query[1]
                 #     ticker = query[2]
