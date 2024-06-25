@@ -181,6 +181,19 @@ def get_major_holders(ticker, filename):
     major_holders.to_csv(filename)
     return major_holders
 
+def get_institutional_holders(ticker, filename):
+    """
+    Получить данные о институциональных держателях акций и сохранить в CSV.
+
+    :param ticker: тикер акции
+    :param filename: имя файла для сохранения
+    :return: данные о институциональных держателях в формате DataFrame
+    """
+    stock = yf.Ticker(ticker)
+    institutional_holders = stock.institutional_holders
+    institutional_holders.to_csv(filename)
+    return institutional_holders
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -281,7 +294,8 @@ async def chat(reader, writer):
                 elif query[0] == 'i_hold':
                     uid = query[1]
                     ticker = query[2]
-                    pass
+                    get_institutional_holders(ticker, 'aapl_institutional_holders.csv')
+                    send_file(writer, uid, 'aapl_institutional_holders.csv')
                 elif query[0] == 'graphics':
                     uid = query[1]
                     await send_file(writer, uid, "1.txt")
