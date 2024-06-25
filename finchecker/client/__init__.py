@@ -33,6 +33,7 @@ def reset_stat(filename, tree, root, tag, clear=False):
 
     tree.write(filename)
 
+
 class Client(cmd.Cmd):
     """Class for sending requests to server with ability of using cmd instead of GUI."""
 
@@ -300,9 +301,10 @@ class Parametres(QWidget):
 
 
 class ChatApp(QMainWindow):
-    def __init__(self, name):
+    def __init__(self, name, client):
         super().__init__()
         self.username = name
+        self.client = client
         self.cmd = ''
 
         # set scroll options
@@ -371,22 +373,24 @@ class ChatApp(QMainWindow):
         # Get the message from the input field
         message = self.username + ': ' + self.message_input.text()
 
-# TODO: отправить сообщение серверу
-        # Append the message to the chat history
-        self.chat_history.append(message)
-
-        # Update the chat display
-        self.update_chat_display()
+        # отправить сообщение серверу
+        self.client.do_sayall(message)
+        self.get_msg(message)
 
         # Clear the input field
         self.message_input.clear()
 
-# TODO: отображать сообщения от других клиентов
+    def get_msg(self, msg):
+        self.chat_history.append(msg)
+
+        # Update the chat display
+        self.update_chat_display()
+
+    # отображать сообщения от других клиентов
     def update_chat_display(self):
         # Display the chat history in the QLabel
         chat_text = "\n".join(self.chat_history)
         self.chat_label.setText(chat_text)
-
 
 
 def main():
