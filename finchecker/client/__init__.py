@@ -25,7 +25,7 @@ def update_stat(filename, tree, root, tag):
     tree.write(filename)
 
 
-def reset_stat(filename, tree, root, tag, clear=False):
+def reset_stat(filename, tree, root, clear=False):
     for cmd in root:
         if clear:
             cmd.text = "0"
@@ -103,7 +103,7 @@ class Client(cmd.Cmd):
         update_stat(self.cur_path_xml, self.tree, self.root, "sayall")
         self.conn.sendall(("sayall " + msg + "\n").encode())
 
-    def do_EOF(self, args):
+    def do_EOF(self):
         """End client activity."""
         reset_stat(self.cur_path_xml, self.tree, self.root, False)
         return True
@@ -425,5 +425,9 @@ def main():
         rec.start()
 
         window.show()
+
         # client.cmdloop()
         app.exec_()
+        print('hello')
+        client.do_EOF()
+
