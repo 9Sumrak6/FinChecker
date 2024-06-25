@@ -84,9 +84,9 @@ class Client(cmd.Cmd):
         Client.file_name[Client.uid] = filename
         Client.uid = (Client.uid + 1) % 1000
 
-        update_stat(self.cur_path_xml, self.tree, self.root, Client.full_name[cmd])
+        update_stat(self.cur_path_xml, self.tree, self.root, cmd)
 
-        self.conn.sendall((f"{cmd} {Client.uid - 1} " + args + "\n").encode())
+        self.conn.sendall((f"{Client.full_name[cmd]} {Client.uid - 1} " + args + "\n").encode())
 
     # def do_graphics(self, args):
     #     new = args.split()
