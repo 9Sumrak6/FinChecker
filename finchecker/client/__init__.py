@@ -1,3 +1,5 @@
+"""Init file with all functionality for client."""
+
 import socket
 import sys
 import cmd
@@ -9,18 +11,32 @@ from PyQt5.QtCore import Qt
 
 
 class Client(cmd.Cmd):
+    """Class for sending requests to server with ability of using cmd instead of GUI."""
+
     prompt = ":->"
 
     uid = 0
     file_name = dict()
 
     def __init__(self, conn, stdin=sys.stdin):
-        """Initialize variables."""
+        """
+        Initialize variables.
+
+        :param conn: socket to server
+        :param stdin: input stream
+        """
         super().__init__(stdin=stdin)
 
         self.conn = conn
 
     def do_req(self, cmd, filename, args=''):
+        """
+        Send request to server.
+
+        :param cmd: type of command
+        :param filename: name of file where it will be stored
+        :param args: arguments for executing command
+        """
         Client.file_name[Client.uid] = filename
         Client.uid = (Client.uid + 1) % 1000
         self.conn.sendall((f"{cmd} {Client.uid - 1} " + args + "\n").encode())
@@ -31,17 +47,27 @@ class Client(cmd.Cmd):
     #     Client.uid = (Client.uid + 1) % 1000
     #     self.conn.sendall((f"graphics {Client.uid - 1}\n").encode())
 
-    def do_sayall(self, args):
-        """Send message to all players."""
-        self.conn.sendall(("sayall " + args + "\n").encode())
+    def do_sayall(self, msg):
+        """
+        Send message for users.
+
+        :param msg: message
+        """
+        self.conn.sendall(("sayall " + msg + "\n").encode())
 
     def do_EOF(self, args):
-        """End cmd activity."""
+        """End client activity."""
         return True
 
 
 def recieve(conn, client, window):
-    """Recieve the messages from server in another thread."""
+    """
+    Recieve the messages from server in another thread.
+    
+    :param conn: socket to server
+    :param client: class Client
+    :param window: GUI window 
+    """
     files = dict()
 
     while conn is not None:
