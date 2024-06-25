@@ -2,8 +2,11 @@ import socket
 import sys
 import cmd
 import threading
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFormLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QVBoxLayout, QScrollArea
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget
+from PyQt5.QtWidgets import QFormLayout, QLabel, QLineEdit, QPushButton, QMessageBox, QVBoxLayout, QScrollArea
 from PyQt5.QtCore import Qt
+
 
 class Client(cmd.Cmd):
     prompt = ":->"
@@ -17,10 +20,10 @@ class Client(cmd.Cmd):
 
         self.conn = conn
 
-    def do_req(self, cmd, filename, args = ''):
+    def do_req(self, cmd, filename, args=''):
         Client.file_name[Client.uid] = filename
-        uid = (uid + 1) % 1000
-        self.conn.sendall((f"{cmd} {uid - 1} " + args + "\n").encode())
+        Client.uid = (Client.uid + 1) % 1000
+        self.conn.sendall((f"{cmd} {Client.uid - 1} " + args + "\n").encode())
 
     # def do_graphics(self, args):
     #     new = args.split()

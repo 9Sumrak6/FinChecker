@@ -95,10 +95,6 @@ async def chat(reader, writer):
                     uid = query[1]
                     ticker = query[2]
                     pass
-                # elif query[0] == 'sust':
-                #     uid = query[1]
-                #     ticker = query[2]
-                #     pass
                 elif query[0] == 'm_hold':
                     uid = query[1]
                     ticker = query[2]
