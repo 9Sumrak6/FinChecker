@@ -179,9 +179,10 @@ def check_data(inp: str) -> bool:
 
 
 class LoginFormApp(QMainWindow):
-    def __init__(self):
+    def __init__(self, socket):
         super().__init__()
         self.username = ''
+        self.socket = socket
 
         # Set the window properties (title and initial size)
         self.setWindowTitle("Login Form")
@@ -213,17 +214,21 @@ class LoginFormApp(QMainWindow):
         # Retrieve the username and password entered by the user
         username = self.username_field.text()
 
-# TODO: get reserved usernames from server
-        usernames_in_use = ['a']
+        # get reserved usernames from server
+        self.socket.sendall((username + '\n').encode())
+        print(username)
+        ans = self.socket.recv(1024).decode()
 
-# TODO: send new username to server
+        if ans == 'off':
+            QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")
+            self.username = ''
+        # send new username to server
         # Check if the username and password are valid (for demonstration purposes)
-        if username not in usernames_in_use:
+        # if username not in usernames_in_use:
+        else:
             self.username = username
             self.close()
             QMessageBox.information(self, "Login Successful", "Welcome, " + username + "!")
-        else:
-            QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")
 
 
 class Parametres(QWidget):
