@@ -1,4 +1,11 @@
 import asyncio
+import yfinance as yf
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 
 
 async def send_file(writer, uid, file):
@@ -19,6 +26,20 @@ async def send_file(writer, uid, file):
 
     f.close()
 
+def get_correlation_table(tickers, start_date, end_date, filename):
+    """
+    Получить таблицу корреляции для заданных тикеров в указанный период и сохранить в CSV.
+
+    :param tickers: список тикеров акций
+    :param start_date: начальная дата в формате 'YYYY-MM-DD'
+    :param end_date: конечная дата в формате 'YYYY-MM-DD'
+    :param filename: имя файла для сохранения
+    :return: таблица корреляции в формате DataFrame
+    """
+    data = yf.download(tickers, start=start_date, end=end_date)['Adj Close']
+    correlation_table = data.corr()
+    correlation_table.to_csv(filename)
+    return correlation_table
 
 clients_names = set()
 clients_conns = dict()
@@ -66,7 +87,7 @@ async def chat(reader, writer):
                     ticker = query[2]
                     start_date = query[3]
                     end_date = query[4]
-                    pass
+                    correlation_table = get_correlation_table(tickers, start_date, end_date, 'correlation_table.csv')
                 elif query[0] == 'stock':
                     uid = query[1]
                     ticker = query[2]
