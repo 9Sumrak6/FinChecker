@@ -85,7 +85,6 @@ class Client(cmd.Cmd):
         Client.uid = (Client.uid + 1) % 1000
 
         update_stat(self.cur_path_xml, self.tree, self.root, "_".join(cmd.split()))
-
         self.conn.sendall((f"{Client.full_name[cmd]} {Client.uid - 1} " + args + "\n").encode())
 
     # def do_graphics(self, args):
@@ -291,7 +290,7 @@ class Parametres(QWidget):
 
     def submit(self):
         # Retrieve the username and password entered by the user
-        if cmd in self.other:
+        if self.cmd in self.other:
             start_date = self.start_date_field.text()
             end_date = self.end_date_field.text()
         self.filename = self.filename_field.text()
@@ -299,13 +298,13 @@ class Parametres(QWidget):
         # TODO: check tickers and maybe filename
         # TODO: send request to server
         # Check if the username and password are valid (for demonstration purposes)
-        if cmd not in self.other:
-            self.client.do_req(self.cmd, self.filename, "google")
+        if self.cmd not in self.other:
+            self.client.do_req(self.cmd, self.filename, "AMZN")
             QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
         elif check_data(start_date) and check_data(end_date):
             self.start_date = start_date
             self.end_date = end_date
-            self.client.do_req(self.cmd, self.filename, f"google {self.start_date} {self.end_date}")
+            self.client.do_req(self.cmd, self.filename, f"AMZN {self.start_date} {self.end_date}")
             QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
         else:
             QMessageBox.warning(self, "Fail", "Incorrect date format. Please try again.")
@@ -434,6 +433,5 @@ def main():
 
         # client.cmdloop()
         app.exec_()
-        print('hello')
         client.do_EOF()
 
