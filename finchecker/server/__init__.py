@@ -69,6 +69,22 @@ def get_stock_returns(ticker, start_date, end_date, filename):
     data[['Returns']].to_csv(filename)
     return data[['Returns']]
 
+def plot_stock_returns(returns, ticker, filename):
+    """
+    Визуализация доходности акций и сохранение в файл JPG.
+
+    :param returns: данные о доходности акций в формате DataFrame
+    :param ticker: тикер акции
+    :param filename: имя файла для сохранения
+    """
+    plt.figure(figsize=(10, 6))
+    returns['Returns'].plot()
+    plt.title(f'{ticker} Stock Returns')
+    plt.xlabel('Date')
+    plt.ylabel('Returns')
+    plt.savefig(filename, format='jpg')
+    plt.close()
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -126,6 +142,8 @@ async def chat(reader, writer):
                     end_date = query[4]
                     returns = get_stock_returns(ticker, start_date, end_date, 'aapl_returns.csv')
                     send_file(writer, uid, 'aapl_returns.csv')
+                    plot_stock_returns(returns, ticker, 'aapl_returns.jpg')
+                    send_file(writer, uid, 'aapl_returns.jpg')
                 elif query[0] == 'dividends':
                     uid = query[1]
                     ticker = query[2]
