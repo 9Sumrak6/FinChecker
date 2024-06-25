@@ -241,8 +241,9 @@ class Parametres(QWidget):
         self.cmd = cmd
         self.client = client
         self.only_ticker = ["financials", "balance sheet", "cash flow", "recommendations", "major holders",
-                       "institutional holders", "graphics"]
-        self.other = ["correlation table", "stock returns", "dividends"]
+                       "institutional holders"]
+        self.other = ["correlation table", "stock returns", "dividends", "graphics"]
+        self.extra = ["predict"]
 
         # Set the window properties (title and initial size)
         self.setWindowTitle("Parametres for " + cmd)
@@ -256,7 +257,7 @@ class Parametres(QWidget):
         completer = QCompleter(names)
 
         # create line edit and add auto complete
-        lineedit_label = QLabel("Company")
+        lineedit_label = QLabel("Company:")
         self.lineedit = QLineEdit()
         self.lineedit.setCompleter(completer)
         layout.addWidget(lineedit_label, 0, 0)
@@ -268,16 +269,21 @@ class Parametres(QWidget):
         end_date_label = QLabel("End date:")
         self.end_date_field = QLineEdit()
         self.end_date_field.setPlaceholderText("Date format: YYYY-MM-DD")
+        days_label = QLabel("The number of days to predict:")
+        self.days_field = QLineEdit()
         filename_label = QLabel("File name:")
         self.filename_field = QLineEdit()
 
-        if cmd in self.other:
+        if cmd in self.other or cmd in self.extra:
             layout.addWidget(start_date_label, 1, 0)
             layout.addWidget(self.start_date_field, 1, 1)
             layout.addWidget(end_date_label, 2, 0)
             layout.addWidget(self.end_date_field, 2, 1)
-        layout.addWidget(filename_label, 3, 0)
-        layout.addWidget(self.filename_field, 3, 1)
+        if cmd in self.extra:
+            layout.addWidget(days_label, 3, 0)
+            layout.addWidget(self.days_field, 3, 1)
+        layout.addWidget(filename_label, 4, 0)
+        layout.addWidget(self.filename_field, 4, 1)
 
         submit_button = QPushButton("Submit")
         submit_button.clicked.connect(self.submit)
@@ -330,7 +336,7 @@ class ChatApp(QMainWindow):
 
         # auto complete options
         names = ["correlation table", "stock returns", "dividends", "financials", "balance sheet", "cash flow",
-                 "recommendations", "major holders", "institutional holders", "graphics"]
+                 "recommendations", "major holders", "institutional holders", "graphics", "predict"]
         completer = QCompleter(names)
 
         lineedit_label = QLabel("Command")
