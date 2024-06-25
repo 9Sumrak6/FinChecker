@@ -17,16 +17,16 @@ class Client(cmd.Cmd):
 
         self.conn = conn
 
-    def do_req(self, cmd, filename, args):
-        file_name[uid] = filename
+    def do_req(self, cmd, filename, args = ''):
+        Client.file_name[Client.uid] = filename
         uid = (uid + 1) % 1000
         self.conn.sendall((f"{cmd} {uid - 1} " + args + "\n").encode())
 
-    def do_graphics(self, args):
-        new = args.split()
-        Client.file_name[Client.uid] = new[0]
-        Client.uid = (Client.uid + 1) % 1000
-        self.conn.sendall((f"graphics {Client.uid - 1}\n").encode())
+    # def do_graphics(self, args):
+    #     new = args.split()
+    #     Client.file_name[Client.uid] = new[0]
+    #     Client.uid = (Client.uid + 1) % 1000
+    #     self.conn.sendall((f"graphics {Client.uid - 1}\n").encode())
 
     def do_sayall(self, args):
         """Send message to all players."""
@@ -227,5 +227,5 @@ def main():
         rec.start()
 
         window.show()
-        client.cmdloop()
+        # client.cmdloop()
         app.exec_()
