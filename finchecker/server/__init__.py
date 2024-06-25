@@ -212,6 +212,49 @@ def plot_stock_prices(ticker, start_date, end_date, filename):
     plt.savefig(filename, format='jpg')
     plt.close()
 
+def predict_stock_price(ticker, start_date, end_date, forecast_days, filename):
+    """
+    Предсказать цены акций на основе линейной регрессии и сохранить график в JPG.
+
+    :param ticker: тикер акции
+    :param start_date: начальная дата в формате 'YYYY-MM-DD'
+    :param end_date: конечная дата в формате 'YYYY-MM-DD'
+    :param forecast_days: количество дней для предсказания
+    :param filename: имя файла для сохранения
+    :return: None
+    """
+    data = yf.download(ticker, start=start_date, end=end_date)
+    data['Date'] = data.index
+    data['Date'] = pd.to_datetime(data['Date'])
+    data['Date'] = data['Date'].map(pd.Timestamp.toordinal)
+
+    X = data[['Date']]
+    y = data['Adj Close']
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+
+    y_pred = model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    print(f'Mean Squared Error: {mse}')
+
+    future_dates = pd.date_range(start=data.index[-1], periods=forecast_days+1, inclusive='right')
+    future_dates_ordinal = future_dates.map(pd.Timestamp.toordinal).values.reshape(-1, 1)
+
+    future_predictions = model.predict(future_dates_ordinal)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(data.index, data['Adj Close'], label='Historical Prices')
+    plt.plot(future_dates, future_predictions, label='Predicted Prices', linestyle='--')
+    plt.title(f'{ticker} Stock Price Prediction')
+    plt.xlabel('Date')
+    plt.ylabel('Adjusted Close Price')
+    plt.legend()
+    plt.savefig(filename, format='jpg')
+    plt.close()
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
@@ -322,6 +365,14 @@ async def chat(reader, writer):
                     plot_stock_prices(ticker, start_date, end_date, 'aapl_stock_prices.jpg')
                     await send_file(writer, uid, 'aapl_stock_prices.jpg')
                     #await send_file(writer, uid, "1.txt")
+                elif query[0] == 'predict':
+                    uid = query[1]
+                    ticker = query[2]
+                    start_date = query[3]
+                    end_date = query[4]
+                    forecast_days = query[5]
+                    predict_stock_price(ticker, start_date, end_date, forecast_days, filename='aapl_price_prediction.jpg')
+                    await send_file(writer, uid, 'aapl_price_prediction.jpg')
                 elif query[0] == 'sayall':
                     for i in clients_names:
                         if i == name:
