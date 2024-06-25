@@ -381,7 +381,7 @@ async def chat(reader, writer):
                     ticker = query[2]
                     start_date = query[3]
                     end_date = query[4]
-                    forecast_days = query[5]
+                    forecast_days = int(query[5])
                     predict_stock_price(ticker, start_date, end_date, forecast_days, filename='aapl_price_prediction.jpg')
                     await send_file(writer, uid, 'aapl_price_prediction.jpg')
                 elif query[0] == 'sayall':
