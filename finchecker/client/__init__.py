@@ -342,7 +342,7 @@ class ChatApp(QMainWindow):
         self.scroll = QScrollArea()
 
         # Set the window properties (title and initial size)
-        self.setWindowTitle("Chat Application")
+        self.setWindowTitle(self.locale.gettext("Chat"))
         self.setGeometry(100, 100, 400, 300)  # (x, y, width, height)
 
         # Create a central widget for the main window
@@ -357,15 +357,18 @@ class ChatApp(QMainWindow):
         # auto complete options
         names = ["correlation table", "stock returns", "dividends", "financials", "balance sheet", "cash flow",
                  "recommendations", "major holders", "institutional holders", "graphics", "predict"]
-        completer = QCompleter(names)
+        locale_names = []
+        for name in names:
+            locale_names.append(self.locale.gettext(name))
 
-        lineedit_label = QLabel("Command")
+        completer = QCompleter(locale_names)
+        lineedit_label = QLabel(self.locale.gettext("Command"))
         self.lineedit = QLineEdit()
         self.lineedit.setCompleter(completer)
         new_layout.addWidget(self.lineedit, 0, 0)
 
         # Create a QPushButton for login
-        submit_button = QPushButton("Submit")
+        submit_button = QPushButton(self.locale.gettext("Submit"))
         submit_button.clicked.connect(self.submit)
 
         # Create a QLabel widget to display chat messages
@@ -375,7 +378,7 @@ class ChatApp(QMainWindow):
 
         # Create a QLineEdit for typing new messages
         self.message_input = QLineEdit()
-        self.message_input.setPlaceholderText("Type your message here...and press Enter key.")
+        self.message_input.setPlaceholderText(self.locale.gettext("Type your message here...and press Enter key."))
         self.message_input.returnPressed.connect(self.send_message)
         layout.addWidget(self.message_input)
 
