@@ -43,6 +43,7 @@ path_login = str(Path(__file__).parent.resolve()) + '/login.xml'
 tree_login = ''
 root_login = ''
 
+
 def indent(elem, level=0):
     i = "\n" + level*"  "
     if len(elem):
@@ -127,6 +128,7 @@ def login(username, pswd):
 
     return True
 
+
 def update_stat(name, cmd):
     global tree, root, path_xml
     for i in full_name:
@@ -188,10 +190,10 @@ def plot_statistics():
 async def send_file(writer, uid, filename, ext):
     """
     Send chosen file.
-    
+
     :param writer: output stream to socket
     :param uid: uid of file on client
-    :param file: file being sent 
+    :param file: file being sent
     """
     writer.write(f"beg file {uid} {ext}\n".encode())
     await writer.drain()
@@ -210,6 +212,7 @@ async def send_file(writer, uid, filename, ext):
 
     f.close()
 
+
 def get_correlation_table(tickers, start_date, end_date, filename):
     """
     Получить таблицу корреляции для заданных тикеров в указанный период и сохранить в CSV.
@@ -225,6 +228,7 @@ def get_correlation_table(tickers, start_date, end_date, filename):
     correlation_table.to_csv(filename)
     return correlation_table
 
+
 def plot_correlation_table(correlation_table, filename):
     """
     Визуализация таблицы корреляции и сохранение в файл JPG.
@@ -237,6 +241,7 @@ def plot_correlation_table(correlation_table, filename):
     plt.title('Correlation Table')
     plt.savefig(filename, format='jpg')
     plt.close()
+
 
 def get_stock_returns(ticker, start_date, end_date, filename):
     """
@@ -252,6 +257,7 @@ def get_stock_returns(ticker, start_date, end_date, filename):
     data['Returns'] = data['Adj Close'].pct_change()
     data[['Returns']].to_csv(filename)
     return data[['Returns']]
+
 
 def plot_stock_returns(returns, ticker, filename):
     """
@@ -269,6 +275,7 @@ def plot_stock_returns(returns, ticker, filename):
     plt.savefig(filename, format='jpg')
     plt.close()
 
+
 def get_dividends(ticker, start_date, end_date, filename):
     """
     Получить данные о дивидендах акций и сохранить в CSV.
@@ -283,6 +290,7 @@ def get_dividends(ticker, start_date, end_date, filename):
     dividends = stock.dividends[start_date:end_date]
     dividends.to_csv(filename)
     return dividends
+
 
 def plot_dividends(dividends, ticker, filename):
     """
@@ -300,6 +308,7 @@ def plot_dividends(dividends, ticker, filename):
     plt.savefig(filename, format='jpg')
     plt.close()
 
+
 def get_financials(ticker, filename):
     """
     Получить финансовые отчеты компании и сохранить в CSV.
@@ -312,6 +321,7 @@ def get_financials(ticker, filename):
     financials = stock.financials
     financials.to_csv(filename)
     return financials
+
 
 def get_balance_sheet(ticker, filename):
     """
@@ -326,6 +336,7 @@ def get_balance_sheet(ticker, filename):
     balance_sheet.to_csv(filename)
     return balance_sheet
 
+
 def get_cash_flow(ticker, filename):
     """
     Получить данные о движении денежных средств компании и сохранить в CSV.
@@ -338,6 +349,7 @@ def get_cash_flow(ticker, filename):
     cash_flow = stock.cashflow
     cash_flow.to_csv(filename)
     return cash_flow
+
 
 def get_recommendations(ticker, filename):
     """
@@ -352,6 +364,7 @@ def get_recommendations(ticker, filename):
     recommendations.to_csv(filename)
     return recommendations
 
+
 def get_major_holders(ticker, filename):
     """
     Получить данные о крупнейших держателях акций и сохранить в CSV.
@@ -365,6 +378,7 @@ def get_major_holders(ticker, filename):
     major_holders.to_csv(filename)
     return major_holders
 
+
 def get_institutional_holders(ticker, filename):
     """
     Получить данные о институциональных держателях акций и сохранить в CSV.
@@ -377,6 +391,7 @@ def get_institutional_holders(ticker, filename):
     institutional_holders = stock.institutional_holders
     institutional_holders.to_csv(filename)
     return institutional_holders
+
 
 def plot_stock_prices(ticker, start_date, end_date, filename):
     """
@@ -395,6 +410,7 @@ def plot_stock_prices(ticker, start_date, end_date, filename):
     plt.ylabel('Adjusted Close Price')
     plt.savefig(filename, format='jpg')
     plt.close()
+
 
 def predict_stock_price(ticker, start_date, end_date, forecast_days, filename):
     """
@@ -439,6 +455,7 @@ def predict_stock_price(ticker, start_date, end_date, forecast_days, filename):
     plt.savefig(filename, format='jpg')
     plt.close()
 
+
 def get_earliest_date(ticker):
     """
     Получить самую раннюю доступную дату для указанного тикера.
@@ -449,6 +466,7 @@ def get_earliest_date(ticker):
     data = yf.download(ticker, start='1900-01-01')
     earliest_date = data.index.min()
     return earliest_date.strftime('%Y-%m-%d')
+
 
 def create_folder(folder_name):
     """
@@ -465,6 +483,7 @@ def create_folder(folder_name):
     #     print(f"Папка '{folder_name}' уже существует.")  # Сообщение, если папка уже существует
     # except Exception as e:
     #     print(f"Ошибка при создании папки '{folder_name}': {e}")  # Сообщение об остальных ошибках
+
 
 clients_names = set()
 clients_pswd = dict()
@@ -488,7 +507,7 @@ def cut_login(register):
 async def chat(reader, writer):
     """
     Async chat with users.
-    
+
     :param reader: inpurt stream from socket
     :param writer: output stream to socket
     """
@@ -536,7 +555,6 @@ async def chat(reader, writer):
                 query = q.result().decode()
                 query = query.replace(',', ' ')
                 query = query.strip().split()
-
 
                 if len(query) == 0:
                     writer.write("Command is incorrect.\n".encode())
@@ -625,7 +643,7 @@ async def chat(reader, writer):
                     full_path = f"server_generates/{name}/aapl_stock_prices"
                     plot_stock_prices(ticker, start_date, end_date, f'{full_path}.jpg')
                     await send_file(writer, uid, full_path, '.jpg')
-                    #await send_file(writer, uid, "1.txt")
+                    # await send_file(writer, uid, "1.txt")
                 elif query[0] == 'predict':
                     uid = query[1]
                     ticker = companies[query[2]]
