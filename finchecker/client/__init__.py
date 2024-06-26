@@ -266,7 +266,7 @@ class LoginFormApp(QMainWindow):
         password = self.password_field.text()
 
         # get reserved usernames from server
-        self.socket.sendall(('usr' + username + 'pswd' + password + '\n').encode())
+        self.socket.sendall(('usr ' + username + ' /pswd/ ' + password + '\n').encode())
         #self.socket.sendall((password + '\n').encode())
         print(username)
         ans = self.socket.recv(1024).decode()
