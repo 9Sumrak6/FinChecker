@@ -2,9 +2,12 @@
 
 import socket
 import sys
+import os
 import cmd
 import threading
 import gettext
+import seaborn
+from matplotlib import pyplot as plt 
 
 import xml.etree.ElementTree as ET
 from common import companies
@@ -67,6 +70,11 @@ def update_stat(filename, tree, root, tag):
     tree.write(filename)
 
 
+def get_stat(filename, tree, root, tag):
+    for cmd in root.findall(tag):
+        return int(cmd.text)
+
+
 def reset_stat(filename, tree, root, clear=False):
     for cmd in root:
         if clear:
@@ -98,6 +106,21 @@ class Client(cmd.Cmd):
         'sayall': 'sayall',
         'predict': 'predict'
     }
+
+    keys = [
+        'correlation_table',
+        'stock_returns',
+        'dividends',
+        'financials',
+        'balance_sheet',
+        'cash_flow',
+        'recommendations',
+        'major_holders',
+        'institutional_holders',
+        'graphics',
+        'sayall',
+        'predict'
+    ]
 
     def __init__(self, conn, stdin=sys.stdin):
         """
@@ -146,6 +169,27 @@ class Client(cmd.Cmd):
         """
         update_stat(self.cur_path_xml, self.tree, self.root, "sayall")
         self.conn.sendall(("sayall " + msg + "\n").encode())
+
+    def do_vis(self):
+        values = []
+
+        for i in Client.keys:
+            values.append(get_stat(self.cur_path_xml, self.tree, self.root, i))
+
+        df = pd.DataFrame({'country': tmp.index, 'num': tmp.values})
+
+        plt.figure(figsize=(10, 5))
+
+        plt.title('Statistics of requests', fontsize=15)
+
+        sns.barplot(df, x=df.country, y=df.num)
+
+        plt.xlabel('Request')
+        plt.ylabel('Number of requests')
+
+        plt.grid(True)
+        plt.savefig('picture.jpg')
+        os.startfile('picture.jpg')
 
     def do_EOF(self):
         """End client activity."""
