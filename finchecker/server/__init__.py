@@ -168,7 +168,7 @@ async def send_file(writer, uid, filename, ext):
 
     await asyncio.sleep(0.1)
 
-    writer.write(f"end file {uid}\n".encode())
+    writer.write(f"end file {uid} {ext}\n".encode())
     await writer.drain()
 
     f.close()
@@ -435,13 +435,15 @@ def create_folder(folder_name):
 
     :param folder_name: Имя папки, которую нужно создать.
     """
-    try:
-        os.makedirs(folder_name)
-        print(f"Папка '{folder_name}' успешно создана.")  # Сообщение об успешном создании папки
-    except FileExistsError:
-        print(f"Папка '{folder_name}' уже существует.")  # Сообщение, если папка уже существует
-    except Exception as e:
-        print(f"Ошибка при создании папки '{folder_name}': {e}")  # Сообщение об остальных ошибках
+    if not Path(folder_name).is_dir():
+        Path(folder_name).mkdir(parents=True, exist_ok=True)
+    # try:
+    #     os.makedirs(folder_name)
+    #     print(f"Directory '{folder_name}' успешно создана.")  # Сообщение об успешном создании папки
+    # except FileExistsError:
+    #     print(f"Папка '{folder_name}' уже существует.")  # Сообщение, если папка уже существует
+    # except Exception as e:
+    #     print(f"Ошибка при создании папки '{folder_name}': {e}")  # Сообщение об остальных ошибках
 
 
 clients_names = set()

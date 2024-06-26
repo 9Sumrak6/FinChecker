@@ -28,6 +28,8 @@ LOCALES = {
     "en_US.UTF-8": gettext.NullTranslations(),
 }
 
+# GEN_PATH = str(os.path.dirname(__file__) + '/../../generates')
+
 
 def indent(elem, level=0):
     i = "\n" + level*"  "
@@ -192,8 +194,13 @@ class Client(cmd.Cmd):
         plt.ylabel(self.locale.gettext('Number of requests'))
 
         plt.grid(True)
-        plt.savefig('picture.jpg')
-        im = Image.open("picture.jpg")
+
+        if not Path('generates').is_dir():
+            Path('generates').mkdir(parents=True, exist_ok=True)
+
+        plt.savefig('generates/statistics.jpg')
+
+        im = Image.open("generates/statistics.jpg")
         im.show()
 
     def do_EOF(self):
@@ -223,10 +230,17 @@ def recieve(conn, client, window):
             data = new.decode().split()
 
             if data[0] == 'beg' and data[1] == 'file':
-                files[int(data[2])] = open(client.file_name[int(data[2])] + data[3], "wb")
+                if not Path('generates').is_dir():
+                    Path('generates').mkdir(parents=True, exist_ok=True)
+
+                files[int(data[2])] = open('generates/' + client.file_name[int(data[2])] + data[3], "wb")
             elif data[0] == "end" and data[1] == "file":
                 files[int(data[2])].close()
                 del files[int(data[2])]
+
+                if data[3] != '.csv':
+                    im = Image.open('generates/' + client.file_name[int(data[2])] + data[3])
+                    im.show()
         else:
             i1, i2 = 0, 0
             for i in range(100):
@@ -238,7 +252,7 @@ def recieve(conn, client, window):
 
             file_num = int(new[:i1].decode())
             num = int(new[i1+1:i2].decode()) - 1
-            print(new, i2)
+
             files[file_num].write(new[i2 + 1:])
 
             for i in range(num):
