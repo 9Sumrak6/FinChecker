@@ -1,8 +1,10 @@
 *.lock
-*/*/__pycache__
 *.png
 *.jpg
 *.jpeg
 *.txt
 *.csv
 *.xls*
+*.xml
+*/*/__pycache__
+*/*/*.xml

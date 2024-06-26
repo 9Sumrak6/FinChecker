@@ -17,10 +17,42 @@ from datetime import date
 
 PO_PATH = Path(__file__).resolve().parent / 'po'
 LOCALES = {
-    "ru_RU.UTF-8": gettext.translation("gui", PO_PATH, ["ru"]),
+    # "ru_RU.UTF-8": gettext.translation("gui", PO_PATH, ["ru"]),
+    "ru_RU.UTF-8": gettext.NullTranslations(),
     "en_US.UTF-8": gettext.NullTranslations(),
 }
 
+def indent(elem, level=0):
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for elem in elem:
+            indent(elem, level+1)
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+
+def create_xml(path, full_name):
+    if Path(path).is_file():
+        return True
+
+    root = ET.Element("statistics")
+
+    for i in full_name:
+        field = ET.SubElement(root, "_".join(i.split()))
+        field.text = "0"
+        field.set('updated', 'no')
+
+    tree = ET.ElementTree(root)
+    indent(root)
+    tree.write(path, encoding="utf-8", xml_declaration=True)
+
+    return True
 
 def update_stat(filename, tree, root, tag):
     # tree = ET.parse(filename)
@@ -78,6 +110,8 @@ class Client(cmd.Cmd):
         self.conn = conn
 
         self.cur_path_xml = str(Path(__file__).parent.resolve()) + '/stat.xml'
+
+        create_xml(self.cur_path_xml, Client.full_name)
 
         self.tree = ET.parse(self.cur_path_xml)
         self.root = self.tree.getroot()
@@ -138,7 +172,7 @@ def recieve(conn, client, window):
             data = new.decode().split()
 
             if data[0] == 'beg' and data[1] == 'file':
-                files[int(data[2])] = open(client.file_name[int(data[2])], "wb")
+                files[int(data[2])] = open(client.file_name[int(data[2])] + data[3], "wb")
             elif data[0] == "end" and data[1] == "file":
                 files[int(data[2])].close()
                 del files[int(data[2])]
