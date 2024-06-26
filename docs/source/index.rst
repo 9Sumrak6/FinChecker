@@ -5,7 +5,7 @@
 
 Welcome to FinChecker's documentation!
 ======================================
-**Mood** is PVE multi-user game. Here playes can add monsters, attack them and move around the field. Moreover, u can communicate with other players ang negotiate with them to attack the monsters together.
+**Finchecker** is a multi-user application for financial data analyses.
 
 .. tip::
     `Link <https://github.com/ranaroussi/yfinance>`_ to the used in project `yfinance` page.
