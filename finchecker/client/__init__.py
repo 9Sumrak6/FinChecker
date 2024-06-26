@@ -182,9 +182,9 @@ class Client(cmd.Cmd):
         for i in Client.keys:
             values.append(get_stat(self.cur_path_xml, self.tree, self.root, i))
 
-        df = pd.DataFrame({'country': Client.keys, 'num': values})
+        df = pd.DataFrame({'commands': Client.keys, 'num': values})
 
-        plt.figure(figsize=(10, 5))
+        plt.figure(figsize=(16, 9))
 
         plt.title(self.locale.gettext('Statistics of requests'), fontsize=15)
 
@@ -197,7 +197,8 @@ class Client(cmd.Cmd):
 
         if not Path('generates').is_dir():
             Path('generates').mkdir(parents=True, exist_ok=True)
-
+        plt.xticks(rotation=45)
+        plt.tight_layout()
         plt.savefig('generates/statistics.jpg')
 
         im = Image.open("generates/statistics.jpg")
