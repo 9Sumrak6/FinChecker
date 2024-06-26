@@ -262,9 +262,11 @@ def plot_correlation_table(correlation_table, filename):
     :param correlation_table: таблица корреляции в формате DataFrame
     :param filename: имя файла для сохранения
     """
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(16, 9))
     sns.heatmap(correlation_table, annot=True, cmap='coolwarm', linewidths=0.5)
     plt.title('Correlation Table')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -293,11 +295,13 @@ def plot_stock_returns(returns, ticker, filename):
     :param ticker: тикер акции
     :param filename: имя файла для сохранения
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     returns['Returns'].plot()
     plt.title(f'{ticker} Stock Returns')
     plt.xlabel('Date')
     plt.ylabel('Returns')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -326,11 +330,13 @@ def plot_dividends(dividends, ticker, filename):
     :param ticker: тикер акции
     :param filename: имя файла для сохранения
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     dividends.plot(kind='bar')
     plt.title(f'{ticker} Dividends')
     plt.xlabel('Date')
     plt.ylabel('Dividend')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -429,11 +435,13 @@ def plot_stock_prices(ticker, start_date, end_date, filename):
     :param filename: имя файла для сохранения
     """
     data = yf.download(ticker, start=start_date, end=end_date)
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     plt.plot(data['Adj Close'])
     plt.title(f'{ticker} Stock Prices')
     plt.xlabel('Date')
     plt.ylabel('Adjusted Close Price')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -471,13 +479,15 @@ def predict_stock_price(ticker, start_date, end_date, forecast_days, filename):
 
     future_predictions = model.predict(future_dates_ordinal)
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     plt.plot(data.index, data['Adj Close'], label='Historical Prices')
     plt.plot(future_dates, future_predictions, label='Predicted Prices', linestyle='--')
     plt.title(f'{ticker} Stock Price Prediction')
     plt.xlabel('Date')
     plt.ylabel('Adjusted Close Price')
     plt.legend()
+    plt.xticks(rotation=45)
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
