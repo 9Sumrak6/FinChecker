@@ -372,8 +372,22 @@ def get_earliest_date(ticker):
     return earliest_date.strftime('%Y-%m-%d')
 
 clients_names = set()
+clients_pswd = dict()
 clients_conns = dict()
 clients_locales = dict()
+
+
+def cut_login(register):
+    name, pswd = '', ''
+
+    for i in range(4, len(register)):
+        if register[i:i+6] == '/pswd/':
+            pswd = register[i+7:]
+            break
+        else:
+            name += register[i]
+
+    return name.strip(), pswd.strip()
 
 
 async def chat(reader, writer):
@@ -387,18 +401,23 @@ async def chat(reader, writer):
 
     me = "{}:{}".format(*writer.get_extra_info('peername'))
 
-    name = await reader.readline()
-    name = name.decode()[:-1]
+    register = await reader.readline()
+    register = register.decode()
 
-    while name in clients_names:
+    name, pswd = cut_login(register)
+
+    while name in clients_names and pswd != clients_pswd[name]:
         writer.write("off".encode())
         await writer.drain()
 
-        name = await reader.readline()
-        name = name.decode()[:-1]
+        register = await reader.readline()
+        register = register.decode()
+
+        name, pswd = cut_login(register)
 
     clients_names.add(name)
-
+    clients_pswd[name] = pswd
+    print(name, pswd)
     add_user(name, full_name)
 
     writer.write("in".encode())
@@ -414,8 +433,12 @@ async def chat(reader, writer):
 
         for q in done:
             if q is send:
-                query = q.result().decode().strip().split()
+                query = q.result().decode()
+                query = query.replace(',', ' ')
+                query.strip().split()
+
                 print(query)
+
                 if len(query) == 0:
                     writer.write("Command is incorrect.\n".encode())
                     continue
@@ -423,9 +446,9 @@ async def chat(reader, writer):
                 update_stat(name, query[0])
                 if query[0] == 'corr':
                     uid = query[1]
-                    ticker = query[2]
-                    start_date = query[3]
-                    end_date = query[4]
+                    ticker = query[2:-2]
+                    start_date = query[-2]
+                    end_date = query[-1]
                     correlation_table = get_correlation_table(ticker, start_date, end_date, 'correlation_table.csv')
                     await send_file(writer, uid, 'correlation_table', '.csv')
                     plot_correlation_table(correlation_table, 'correlation_table.jpg')
