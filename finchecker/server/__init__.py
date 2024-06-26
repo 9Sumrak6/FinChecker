@@ -330,11 +330,13 @@ def plot_dividends(dividends, ticker, filename):
     :param ticker: тикер акции
     :param filename: имя файла для сохранения
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     dividends.plot(kind='bar')
     plt.title(f'{ticker} Dividends')
     plt.xlabel('Date')
     plt.ylabel('Dividend')
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
