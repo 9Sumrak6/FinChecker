@@ -11,6 +11,7 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from PIL import Image
 
 from ..common import companies
 
@@ -144,6 +145,44 @@ def update_stat(name, cmd):
     tree = ET.ElementTree(root)
     indent(root)
     tree.write(path_xml)
+
+
+def plot_statistics():
+    global tree, root, path_xml
+
+    cmds = dict()
+
+    for user in root:
+        for command in user:
+            cmds[command.tag] = cmds.setdefault(command.tag, 0) + int(command.text)
+
+    keys = list(cmds.keys())
+    values = list(cmds.values())
+
+    df = pd.DataFrame({'country': keys, 'num': values})
+
+    plt.figure(figsize=(16, 9))
+
+    plt.title('Statistics of requests', fontsize=15)
+
+    sns.barplot(df, x=df.country, y=df.num)
+
+    plt.xlabel('Request')
+    plt.ylabel('Number of requests')
+
+    plt.grid(True)
+
+    if not Path('generates').is_dir():
+        Path('generates').mkdir(parents=True, exist_ok=True)
+
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    plt.savefig('server_generates/statistics.jpg')
+    im = Image.open("server_generates/statistics.jpg")
+
+    im.show()
+
 
 
 async def send_file(writer, uid, filename, ext):
@@ -639,3 +678,4 @@ def main():
     """Start server activity."""
     create_xml()
     asyncio.run(run_server())
+    plot_statistics()
