@@ -24,7 +24,8 @@ from datetime import date
 
 PO_PATH = str(os.path.dirname(__file__) + '/../po')
 LOCALES = {
-    "ru_RU.UTF-8": gettext.translation("gui", PO_PATH, ["ru"]),
+    # "ru_RU.UTF-8": gettext.translation("gui", PO_PATH, ["ru"]),
+    "ru_RU.UTF-8": gettext.NullTranslations(),
     "en_US.UTF-8": gettext.NullTranslations(),
 }
 
