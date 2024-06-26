@@ -295,11 +295,13 @@ def plot_stock_returns(returns, ticker, filename):
     :param ticker: тикер акции
     :param filename: имя файла для сохранения
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     returns['Returns'].plot()
     plt.title(f'{ticker} Stock Returns')
     plt.xlabel('Date')
     plt.ylabel('Returns')
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
