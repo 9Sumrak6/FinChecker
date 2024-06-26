@@ -324,9 +324,9 @@ class Parametres(QWidget):
         # create line edit and add auto complete
         lineedit_label = QLabel(self.locale.gettext("Company:"))
         self.lineedit_field = QLineEdit()
-        self.lineedit.setCompleter(completer)
+        self.lineedit_field.setCompleter(completer)
         layout.addWidget(lineedit_label, 0, 0)
-        layout.addWidget(self.lineedit, 0, 1)
+        layout.addWidget(self.lineedit_field, 0, 1)
 
         start_date_label = QLabel(self.locale.gettext("Start date:"))
         self.start_date_field = QLineEdit()
@@ -359,6 +359,7 @@ class Parametres(QWidget):
         if self.cmd in self.other or self.cmd in self.extra:
             start_date = self.start_date_field.text()
             end_date = self.end_date_field.text()
+        self.lineedit = self.lineedit_field.text()
         self.filename = self.filename_field.text()
         if self.cmd in self.extra:
             days = self.days_field.text()
@@ -370,17 +371,17 @@ class Parametres(QWidget):
             self.start_date = start_date
             self.end_date = end_date
             self.days = days
-            self.client.do_req(self.cmd, self.filename, f"{} {self.start_date} {self.end_date} {self.days}")
+            self.client.do_req(self.cmd, self.filename, f"{self.lineedit} {self.start_date} {self.end_date} {self.days}")
             QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
                                     self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
         elif self.cmd not in self.other:
-            self.client.do_req(self.cmd, self.filename, "AMZN")
+            self.client.do_req(self.cmd, self.filename, self.lineedit)
             QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
                                     self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
         elif check_data(start_date) and check_data(end_date):
             self.start_date = start_date
             self.end_date = end_date
-            self.client.do_req(self.cmd, self.filename, f"AMZN {self.start_date} {self.end_date}")
+            self.client.do_req(self.cmd, self.filename, f"{self.lineedit} {self.start_date} {self.end_date}")
             QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"), self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
         else:
             QMessageBox.warning(self, self.locale.gettext("Fail"), self.locale.gettext("Incorrect date format. Please try again."))
