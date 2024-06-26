@@ -287,7 +287,15 @@ def check_data(inp: str) -> bool:
 
 
 class LoginFormApp(QMainWindow):
+    """Authorization."""
+
     def __init__(self, socket, lang='ru_RU.UTF-8'):
+        """
+            Create visualization of LoginFormApp.
+
+            :param socket: socket
+            :param lang: locale language
+        """
         super().__init__()
         self.username = ''
         self.socket = socket
@@ -324,6 +332,7 @@ class LoginFormApp(QMainWindow):
         central_widget.setLayout(form_layout)
 
     def login(self):
+        """Send username and password to server and recieve respond."""
         # Retrieve the username and password entered by the user
         username = self.username_field.text()
         password = self.password_field.text()
@@ -350,8 +359,17 @@ class LoginFormApp(QMainWindow):
                                     self.locale.gettext("Welcome, ") + username + "!")
 
 
-class Parametres(QWidget):
+class Parameters(QWidget):
+    """Send parameters to server."""
+
     def __init__(self, cmd, client, lang='ru_RU.UTF-8'):
+        """
+            Create visualization of parameters.
+
+            :param cmd: command from ChatApp
+            :param client: object of Client class
+            :param lang: locale language
+        """
         super().__init__()
         self.cmd = cmd
         self.client = client
@@ -376,7 +394,7 @@ class Parametres(QWidget):
             self.extra.append(self.locale.gettext(ticker))
 
         # Set the window properties (title and initial size)
-        self.setWindowTitle(self.locale.gettext("Parametres for ") + cmd)
+        self.setWindowTitle(self.locale.gettext("Parameters for ") + cmd)
         self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
 
         layout = QGridLayout()
@@ -420,6 +438,7 @@ class Parametres(QWidget):
         layout.addWidget(submit_button)
 
     def submit(self):
+        """Send parameters to server."""
         # Retrieve the username and password entered by the user
         if self.cmd in self.other or self.cmd in self.extra:
             start_date = self.start_date_field.text()
@@ -459,7 +478,16 @@ class Parametres(QWidget):
 
 
 class ChatApp(QMainWindow):
+    """Chat application for multiple users and client-server communication."""
+
     def __init__(self, name, client, lang='ru_RU.UTF-8'):
+        """
+            Create visualization of functionality.
+
+            :param name: client name
+            :param client: object of Client class
+            :param lang: locale language
+        """
         super().__init__()
         self.locale = LOCALES[lang]
         self.username = name
@@ -527,14 +555,16 @@ class ChatApp(QMainWindow):
         self.scroll.setWidget(central_widget)
 
     def submit(self):
+        """Get command from client and show parameters."""
         self.cmd = self.lineedit.text()
         if self.cmd == "statistics":
             self.client.do_vis()
             return
-        self.w = Parametres(self.cmd, self.client)
+        self.w = Parameters(self.cmd, self.client)
         self.w.show()
 
     def send_message(self):
+        """Send message to all clients."""
         # Get the message from the input field
         message = self.username + ': ' + self.message_input.text()
 
@@ -546,6 +576,11 @@ class ChatApp(QMainWindow):
         self.message_input.clear()
 
     def get_msg(self, msg):
+        """
+            Recieve new message and update display.
+
+            :param msg: message from client
+        """
         self.chat_history.append(msg)
 
         # Update the chat display
@@ -553,6 +588,7 @@ class ChatApp(QMainWindow):
 
     # отображать сообщения от других клиентов
     def update_chat_display(self):
+        """Update chat after recieving new messages."""
         # Display the chat history in the QLabel
         chat_text = "\n".join(self.chat_history)
         self.chat_label.setText(chat_text)
