@@ -32,6 +32,12 @@ LOCALES = {
 
 
 def indent(elem, level=0):
+    """
+    Make indent in xml files.
+
+    :param elem: watching element
+    :param level: level of element
+    """
     i = "\n" + level*"  "
     if len(elem):
         if not elem.text or not elem.text.strip():
@@ -48,6 +54,7 @@ def indent(elem, level=0):
 
 
 def create_xml(path, full_name):
+    """Create xml pattern for statistics."""
     if Path(path).is_file():
         return True
 
@@ -66,9 +73,14 @@ def create_xml(path, full_name):
 
 
 def update_stat(filename, tree, root, tag):
-    # tree = ET.parse(filename)
-    # root = tree.getroot()
+    """
+    Update users activity.
 
+    :param filename: name of file
+    :param tree: tree of xml
+    :param root: root of tree
+    :param tag: tag of updating field
+    """
     for command in root.findall(tag):
         command.text = str(int(command.text) + 1)
         command.set('updated', 'yes')
@@ -77,11 +89,27 @@ def update_stat(filename, tree, root, tag):
 
 
 def get_stat(filename, tree, root, tag):
+    """
+    Get user activity by tag.
+
+    :param filename: name of file
+    :param tree: tree of xml
+    :param root: root of tree
+    :param tag: tag of updating field
+    """
     for command in root.findall(tag):
         return int(command.text)
 
 
 def reset_stat(filename, tree, root, clear=False):
+    """
+    Reset users activity.
+
+    :param filename: name of file
+    :param tree: tree of xml
+    :param root: root of tree
+    :param clear: clear all fields(True) or reset only updated info(False)
+    """
     for command in root:
         if clear:
             command.text = "0"
@@ -133,9 +161,9 @@ class Client(cmd.Cmd):
         Initialize variables.
 
         :param conn: socket to server
+        :param lang: language
         :param stdin: input stream
         """
-
         super().__init__(stdin=stdin)
 
         self.conn = conn
@@ -177,14 +205,15 @@ class Client(cmd.Cmd):
         self.conn.sendall(("sayall " + msg + "\n").encode())
 
     def do_vis(self):
+        """Visualise users activity."""
         values = []
 
         for i in Client.keys:
             values.append(get_stat(self.cur_path_xml, self.tree, self.root, i))
 
-        df = pd.DataFrame({'country': Client.keys, 'num': values})
+        df = pd.DataFrame({'commands': Client.keys, 'num': values})
 
-        plt.figure(figsize=(10, 5))
+        plt.figure(figsize=(16, 9))
 
         plt.title(self.locale.gettext('Statistics of requests'), fontsize=15)
 
@@ -197,7 +226,8 @@ class Client(cmd.Cmd):
 
         if not Path('generates').is_dir():
             Path('generates').mkdir(parents=True, exist_ok=True)
-
+        plt.xticks(rotation=45)
+        plt.tight_layout()
         plt.savefig('generates/statistics.jpg')
 
         im = Image.open("generates/statistics.jpg")
@@ -263,6 +293,7 @@ def recieve(conn, client, window):
 
 
 def check_data(inp: str) -> bool:
+    """Check the correctness of entered date."""
     if len(inp) != 10:
         return False
     inp = inp.split('-')

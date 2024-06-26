@@ -1,3 +1,6 @@
+"""Common fields for server and client."""
+
+
 companies = {
     "3M": "MMM",
     "A. O. Smith": "AOS",

@@ -11,6 +11,7 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from PIL import Image
 
 from ..common import companies
 
@@ -44,6 +45,12 @@ root_login = ''
 
 
 def indent(elem, level=0):
+    """
+    Make indent in xml files.
+
+    :param elem: watching element
+    :param level: level of element
+    """
     i = "\n" + level*"  "
     if len(elem):
         if not elem.text or not elem.text.strip():
@@ -60,6 +67,7 @@ def indent(elem, level=0):
 
 
 def create_xml():
+    """Create xml pattern for statistics and login."""
     global tree, root, path_xml, path_login, tree_login, root_login
 
     if not Path(path_xml).is_file():
@@ -86,6 +94,13 @@ def create_xml():
 
 
 def add_user(username, pswd, full_name):
+    """
+    Add user.
+
+    :param username: name of user
+    :param pswd: user's password
+    :param full_name: dictionary of commands
+    """
     global tree, root, path_xml, tree_login, root_login, path_login
 
     for child in root_login:
@@ -116,6 +131,12 @@ def add_user(username, pswd, full_name):
 
 
 def login(username, pswd):
+    """
+    Login user.
+
+    :param username: name of user
+    :param pswd: user's password
+    """
     global tree_login, root_login, path_login
 
     for child in root_login:
@@ -129,6 +150,12 @@ def login(username, pswd):
 
 
 def update_stat(name, cmd):
+    """
+    Update users activity.
+
+    :param name: name of user
+    :param cmd: executed command
+    """
     global tree, root, path_xml
     for i in full_name:
         if full_name[i] == cmd:
@@ -146,6 +173,44 @@ def update_stat(name, cmd):
     tree = ET.ElementTree(root)
     indent(root)
     tree.write(path_xml)
+
+
+def plot_statistics():
+    """Plot statistics in the end of server work."""
+    global tree, root, path_xml
+
+    cmds = dict()
+
+    for user in root:
+        for command in user:
+            cmds[command.tag] = cmds.setdefault(command.tag, 0) + int(command.text)
+
+    keys = list(cmds.keys())
+    values = list(cmds.values())
+
+    df = pd.DataFrame({'country': keys, 'num': values})
+
+    plt.figure(figsize=(16, 9))
+
+    plt.title('Statistics of requests', fontsize=15)
+
+    sns.barplot(df, x=df.country, y=df.num)
+
+    plt.xlabel('Request')
+    plt.ylabel('Number of requests')
+
+    plt.grid(True)
+
+    if not Path('generates').is_dir():
+        Path('generates').mkdir(parents=True, exist_ok=True)
+
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    plt.savefig('server_generates/statistics.jpg')
+    im = Image.open("server_generates/statistics.jpg")
+
+    im.show()
 
 
 async def send_file(writer, uid, filename, ext):
@@ -197,9 +262,11 @@ def plot_correlation_table(correlation_table, filename):
     :param correlation_table: таблица корреляции в формате DataFrame
     :param filename: имя файла для сохранения
     """
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(16, 9))
     sns.heatmap(correlation_table, annot=True, cmap='coolwarm', linewidths=0.5)
     plt.title('Correlation Table')
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -228,11 +295,13 @@ def plot_stock_returns(returns, ticker, filename):
     :param ticker: тикер акции
     :param filename: имя файла для сохранения
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     returns['Returns'].plot()
     plt.title(f'{ticker} Stock Returns')
     plt.xlabel('Date')
     plt.ylabel('Returns')
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -261,11 +330,13 @@ def plot_dividends(dividends, ticker, filename):
     :param ticker: тикер акции
     :param filename: имя файла для сохранения
     """
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     dividends.plot(kind='bar')
     plt.title(f'{ticker} Dividends')
     plt.xlabel('Date')
     plt.ylabel('Dividend')
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -364,11 +435,13 @@ def plot_stock_prices(ticker, start_date, end_date, filename):
     :param filename: имя файла для сохранения
     """
     data = yf.download(ticker, start=start_date, end=end_date)
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     plt.plot(data['Adj Close'])
     plt.title(f'{ticker} Stock Prices')
     plt.xlabel('Date')
     plt.ylabel('Adjusted Close Price')
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -406,13 +479,15 @@ def predict_stock_price(ticker, start_date, end_date, forecast_days, filename):
 
     future_predictions = model.predict(future_dates_ordinal)
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     plt.plot(data.index, data['Adj Close'], label='Historical Prices')
     plt.plot(future_dates, future_predictions, label='Predicted Prices', linestyle='--')
     plt.title(f'{ticker} Stock Price Prediction')
     plt.xlabel('Date')
     plt.ylabel('Adjusted Close Price')
     plt.legend()
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -453,6 +528,11 @@ clients_locales = dict()
 
 
 def cut_login(register):
+    """
+    Cut entered login.
+
+    :param register: entered command
+    """
     name, pswd = '', ''
 
     for i in range(4, len(register)):
@@ -657,3 +737,4 @@ def main():
     """Start server activity."""
     create_xml()
     asyncio.run(run_server())
+    plot_statistics()
