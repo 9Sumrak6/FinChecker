@@ -2,6 +2,8 @@
 
 import asyncio
 
+import os
+
 import yfinance as yf
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -9,6 +11,8 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+from ..common import companies
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
@@ -407,6 +411,20 @@ def get_earliest_date(ticker):
     earliest_date = data.index.min()
     return earliest_date.strftime('%Y-%m-%d')
 
+def create_folder(folder_name):
+    """
+    Создает папку с заданным именем.
+
+    :param folder_name: Имя папки, которую нужно создать.
+    """
+    try:
+        os.makedirs(folder_name)
+        print(f"Папка '{folder_name}' успешно создана.")  # Сообщение об успешном создании папки
+    except FileExistsError:
+        print(f"Папка '{folder_name}' уже существует.")  # Сообщение, если папка уже существует
+    except Exception as e:
+        print(f"Ошибка при создании папки '{folder_name}': {e}")  # Сообщение об остальных ошибках
+
 clients_names = set()
 clients_pswd = dict()
 clients_conns = dict()
@@ -452,6 +470,7 @@ async def chat(reader, writer):
         name, pswd = cut_login(register)
 
     clients_names.add(name)
+    create_folder(name)
     clients_pswd[name] = pswd
 
     add_user(name, pswd, full_name)
@@ -483,76 +502,94 @@ async def chat(reader, writer):
                 if query[0] == 'corr':
                     uid = query[1]
                     ticker = query[2:-2]
+
+                    for i in range(len(ticker)):
+                        ticker[i] = companies[ticker[i]]
+
                     start_date = query[-2]
                     end_date = query[-1]
-                    correlation_table = get_correlation_table(ticker, start_date, end_date, 'correlation_table.csv')
-                    await send_file(writer, uid, 'correlation_table', '.csv')
-                    plot_correlation_table(correlation_table, 'correlation_table.jpg')
-                    await send_file(writer, uid, 'correlation_table', '.jpg')
+                    full_path = f"{name}/correlation_table"
+                    correlation_table = get_correlation_table(ticker, start_date, end_date, f'{full_path}.csv')
+                    await send_file(writer, uid, full_path, '.csv')
+                    full_path = f"{name}/correlation_table"
+                    plot_correlation_table(correlation_table, f'{full_path}.jpg')
+                    await send_file(writer, uid, full_path, '.jpg')
                 elif query[0] == 'stock':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
-                    returns = get_stock_returns(ticker, start_date, end_date, 'aapl_returns.csv')
-                    await send_file(writer, uid, 'aapl_returns', '.csv')
-                    plot_stock_returns(returns, ticker, 'aapl_returns.jpg')
-                    await send_file(writer, uid, 'aapl_returns', '.jpg')
+                    full_path = f"{name}/aapl_returns"
+                    returns = get_stock_returns(ticker, start_date, end_date, f'{full_path}.csv')
+                    await send_file(writer, uid, full_path, '.csv')
+                    full_path = f"{name}/aapl_returns"
+                    plot_stock_returns(returns, ticker, f'{full_path}.jpg')
+                    await send_file(writer, uid, full_path, '.jpg')
                 elif query[0] == 'dividends':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
-                    dividends = get_dividends(ticker, start_date, end_date, 'aapl_dividends.csv')
-                    await send_file(writer, uid, 'aapl_dividends', '.csv')
-                    plot_dividends(dividends, ticker, 'aapl_dividends.jpg')
-                    await send_file(writer, uid, 'aapl_dividends', '.jpg')
+                    full_path = f"{name}/aapl_dividends"
+                    dividends = get_dividends(ticker, start_date, end_date, f'{full_path}.csv')
+                    await send_file(writer, uid, full_path, '.csv')
+                    full_path = f"{name}/aapl_dividends"
+                    plot_dividends(dividends, ticker, f'{full_path}.jpg')
+                    await send_file(writer, uid, full_path, '.jpg')
                 elif query[0] == 'fin':
                     uid = query[1]
-                    ticker = query[2]
-                    get_financials(ticker, 'aapl_financials.csv')
-                    await send_file(writer, uid, 'aapl_financials', '.csv')
+                    ticker = companies[query[2]]
+                    full_path = f"{name}/aapl_financials"
+                    get_financials(ticker, f'{full_path}.csv')
+                    await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'balance':
                     uid = query[1]
-                    ticker = query[2]
-                    get_balance_sheet(ticker, 'aapl_balance_sheet.csv')
-                    await send_file(writer, uid, 'aapl_balance_sheet', '.csv')
+                    ticker = companies[query[2]]
+                    full_path = f"{name}/aapl_balance_sheet"
+                    get_balance_sheet(ticker, f'{full_path}.csv')
+                    await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'cash':
                     uid = query[1]
-                    ticker = query[2]
-                    get_cash_flow(ticker, 'aapl_cash_flow.csv')
-                    await send_file(writer, uid, 'aapl_cash_flow', '.csv')
+                    ticker = companies[query[2]]
+                    full_path = f"{name}/aapl_cash_flow"
+                    get_cash_flow(ticker, f'{full_path}.csv')
+                    await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'recom':
                     uid = query[1]
-                    ticker = query[2]
-                    get_recommendations(ticker, 'aapl_recommendations.csv')
-                    await send_file(writer, uid, 'aapl_recommendations', '.csv')
+                    ticker = companies[query[2]]
+                    full_path = f"{name}/aapl_recommendations"
+                    get_recommendations(ticker, f'{full_path}.csv')
+                    await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'm_hold':
                     uid = query[1]
-                    ticker = query[2]
-                    get_major_holders(ticker, 'aapl_major_holders.csv')
-                    await send_file(writer, uid, 'aapl_major_holders', '.csv')
+                    ticker = companies[query[2]]
+                    full_path = f"{name}/aapl_major_holders"
+                    get_major_holders(ticker, f'{full_path}.csv')
+                    await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'i_hold':
                     uid = query[1]
-                    ticker = query[2]
-                    get_institutional_holders(ticker, 'aapl_institutional_holders.csv')
-                    await send_file(writer, uid, 'aapl_institutional_holders', '.csv')
+                    ticker = companies[query[2]]
+                    full_path = f"{name}/aapl_institutional_holders"
+                    get_institutional_holders(ticker, f'{full_path}.csv')
+                    await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'graphics':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
-                    plot_stock_prices(ticker, start_date, end_date, 'aapl_stock_prices.jpg')
-                    await send_file(writer, uid, 'aapl_stock_prices', '.jpg')
+                    full_path = f"{name}/aapl_stock_prices"
+                    plot_stock_prices(ticker, start_date, end_date, f'{full_path}.jpg')
+                    await send_file(writer, uid, full_path, '.jpg')
                     #await send_file(writer, uid, "1.txt")
                 elif query[0] == 'predict':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
                     forecast_days = int(query[5])
-                    predict_stock_price(ticker, start_date, end_date, forecast_days, filename='aapl_price_prediction.jpg')
-                    await send_file(writer, uid, 'aapl_price_prediction', '.jpg')
+                    full_path = f"{name}/aapl_price_prediction"
+                    predict_stock_price(ticker, start_date, end_date, forecast_days, filename=f'{full_path}.jpg')
+                    await send_file(writer, uid, full_path, '.jpg')
                 elif query[0] == 'sayall':
                     for i in clients_names:
                         if i == name:

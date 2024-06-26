@@ -1,13 +1,14 @@
 <statistics>
-	<correlation_table updated="no">0</correlation_table>
-	<stock_returns updated="no">0</stock_returns>
-	<dividends updated="no">0</dividends>
-	<financials updated="no">0</financials>
-	<balance_sheet updated="no">0</balance_sheet>
-	<cash_flow updated="no">0</cash_flow>
-	<recommendations updated="no">0</recommendations>
-	<major_holders updated="no">0</major_holders>
-	<institutional_holders updated="no">0</institutional_holders>
-	<graphics updated="no">0</graphics>
-	<sayall updated="no">0</sayall>
+  <correlation_table updated="yes">1</correlation_table>
+  <stock_returns updated="no">0</stock_returns>
+  <dividends updated="no">0</dividends>
+  <financials updated="no">0</financials>
+  <balance_sheet updated="no">0</balance_sheet>
+  <cash_flow updated="no">0</cash_flow>
+  <recommendations updated="no">0</recommendations>
+  <major_holders updated="no">0</major_holders>
+  <institutional_holders updated="no">0</institutional_holders>
+  <graphics updated="no">0</graphics>
+  <sayall updated="no">1</sayall>
+  <predict updated="no">0</predict>
 </statistics>
