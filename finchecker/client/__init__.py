@@ -8,6 +8,7 @@ import threading
 import gettext
 import seaborn as sns
 import pandas as pd
+import locale
 from matplotlib import pyplot as plt
 from PIL import Image
 
@@ -24,7 +25,6 @@ from datetime import date
 PO_PATH = str(os.path.dirname(__file__) + '/../po')
 LOCALES = {
     "ru_RU.UTF-8": gettext.translation("gui", PO_PATH, ["ru"]),
-    # "ru_RU.UTF-8": gettext.NullTranslations(),
     "en_US.UTF-8": gettext.NullTranslations(),
 }
 
@@ -625,18 +625,31 @@ class ChatApp(QMainWindow):
         self.chat_label.setText(chat_text)
 
 
+LANGUAGES = {'en': 'en_US.UTF-8',
+             'ru': 'ru_RU.UTF-8',
+             }
+
+
 def main():
     """Start client."""
     host = "localhost"
     port = 1337
     name = ""
+    args = sys.argv[1:]
+    if len(args) == 2 and args[0] in ["-l", "'--language'"] and args[1] in LANGUAGES.keys():
+        lang = LANGUAGES[args[1]]
+    else:
+        locale.setlocale(locale.LC_ALL, "")
+        lang = locale.getlocale(locale.LC_MESSAGES)[0] + '.UTF-8'
+        if lang not in LOCALES:
+            lang = "en_US.UTF-8"
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
 
         app = QApplication(sys.argv)
 
-        window = LoginFormApp(s)
+        window = LoginFormApp(s, lang)
         window.show()
         app.exec_()
         name = window.username
@@ -646,7 +659,7 @@ def main():
 
         client = Client(s)
         client.do_EOF()
-        window = ChatApp(name, client)
+        window = ChatApp(name, client, lang)
 
         rec = threading.Thread(target=recieve, args=(s, client, window))
         rec.daemon = True
