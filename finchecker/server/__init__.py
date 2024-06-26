@@ -34,6 +34,9 @@ path_xml = str(Path(__file__).parent.resolve()) + '/stat.xml'
 tree = ''
 root = ''
 
+path_login = str(Path(__file__).parent.resolve()) + '/login.xml'
+tree_login = ''
+root_login = ''
 
 def indent(elem, level=0):
     i = "\n" + level*"  "
@@ -52,7 +55,8 @@ def indent(elem, level=0):
 
 
 def create_xml():
-    global tree, root, path_xml
+    global tree, root, path_xml, path_login, tree_login, root_login
+
     if not Path(path_xml).is_file():
         root = ET.Element("statistics")
         tree = ET.ElementTree(root)
@@ -63,15 +67,33 @@ def create_xml():
     tree = ET.parse(path_xml)
     root = tree.getroot()
 
+    if not Path(path_login).is_file():
+        root_login = ET.Element("login")
+        tree_login = ET.ElementTree(root_login)
+        indent(root_login)
+
+        tree_login.write(path_login, encoding="utf-8", xml_declaration=True)
+
+    tree_login = ET.parse(path_login)
+    root_login = tree_login.getroot()
+
     return True
 
 
-def add_user(username, full_name):
-    global tree, root, path_xml
+def add_user(username, pswd, full_name):
+    global tree, root, path_xml, tree_login, root_login, path_login
 
-    for child in root:
+    for child in root_login:
         if child.get('id') == username:
             return False
+
+    field = ET.SubElement(root_login, "user")
+    field.set("id", username)
+    field.text = pswd
+
+    tree_login = ET.ElementTree(root_login)
+    indent(root_login)
+    tree_login.write(path_login, encoding="utf-8", xml_declaration=True)
 
     field = ET.SubElement(root, "user")
     field.set("id", username)
@@ -84,6 +106,19 @@ def add_user(username, full_name):
     tree = ET.ElementTree(root)
     indent(root)
     tree.write(path_xml, encoding="utf-8", xml_declaration=True)
+
+    return True
+
+
+def login(username, pswd):
+    global tree_login, root_login, path_login
+
+    for child in root_login:
+        if child.get('id') == username:
+            if child.text == pswd:
+                return True
+            else:
+                return False
 
     return True
 
@@ -105,6 +140,7 @@ def update_stat(name, cmd):
     tree = ET.ElementTree(root)
     indent(root)
     tree.write(path_xml)
+
 
 async def send_file(writer, uid, filename, ext):
     """
@@ -406,7 +442,7 @@ async def chat(reader, writer):
 
     name, pswd = cut_login(register)
 
-    while name in clients_names and pswd != clients_pswd[name]:
+    while name in clients_names or not login(name, pswd):
         writer.write("off".encode())
         await writer.drain()
 
@@ -417,8 +453,8 @@ async def chat(reader, writer):
 
     clients_names.add(name)
     clients_pswd[name] = pswd
-    print(name, pswd)
-    add_user(name, full_name)
+
+    add_user(name, pswd, full_name)
 
     writer.write("in".encode())
     await writer.drain()
@@ -435,14 +471,14 @@ async def chat(reader, writer):
             if q is send:
                 query = q.result().decode()
                 query = query.replace(',', ' ')
-                query.strip().split()
+                query = query.strip().split()
 
-                print(query)
 
                 if len(query) == 0:
                     writer.write("Command is incorrect.\n".encode())
                     continue
 
+                print(query)
                 update_stat(name, query[0])
                 if query[0] == 'corr':
                     uid = query[1]
