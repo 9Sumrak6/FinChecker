@@ -187,7 +187,7 @@ class Client(cmd.Cmd):
         Client.uid = (Client.uid + 1) % 1000
 
         update_stat(self.cur_path_xml, self.tree, self.root, "_".join(cmd.split()))
-        self.conn.sendall((f"{Client.full_name[cmd]} {Client.uid - 1} " + args + "\n").encode())
+        self.conn.sendall((f"{Client.full_name[cmd]};{Client.uid - 1};" + args + "\n").encode())
 
     # def do_graphics(self, args):
     #     new = args.split()
@@ -487,7 +487,7 @@ class Parameters(QWidget):
             self.end_date = end_date
             self.days = days
             self.client.do_req(self.cmd, self.filename,
-                               f"{self.lineedit} {self.start_date} {self.end_date} {self.days}")
+                               f"{self.lineedit};{self.start_date};{self.end_date};{self.days}")
             QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
                                     self.locale.gettext("Check file ") + self.filename +
                                     self.locale.gettext(" in folder"))
@@ -499,7 +499,7 @@ class Parameters(QWidget):
         elif check_data(start_date) and check_data(end_date):
             self.start_date = start_date
             self.end_date = end_date
-            self.client.do_req(self.cmd, self.filename, f"{self.lineedit} {self.start_date} {self.end_date}")
+            self.client.do_req(self.cmd, self.filename, f"{self.lineedit};{self.start_date};{self.end_date}")
             QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
                                     self.locale.gettext("Check file ") + self.filename +
                                     self.locale.gettext(" in folder"))
