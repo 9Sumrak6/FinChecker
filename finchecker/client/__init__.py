@@ -28,6 +28,8 @@ LOCALES = {
     "en_US.UTF-8": gettext.NullTranslations(),
 }
 
+# GEN_PATH = str(os.path.dirname(__file__) + '/../../generates')
+
 
 def indent(elem, level=0):
     i = "\n" + level*"  "
@@ -223,7 +225,10 @@ def recieve(conn, client, window):
             data = new.decode().split()
 
             if data[0] == 'beg' and data[1] == 'file':
-                files[int(data[2])] = open(client.file_name[int(data[2])] + data[3], "wb")
+                if not Path('generates').is_dir():
+                    Path('generates').mkdir(parents=True, exist_ok=True)
+
+                files[int(data[2])] = open('generates/' + client.file_name[int(data[2])] + data[3], "wb")
             elif data[0] == "end" and data[1] == "file":
                 files[int(data[2])].close()
                 del files[int(data[2])]
@@ -238,7 +243,7 @@ def recieve(conn, client, window):
 
             file_num = int(new[:i1].decode())
             num = int(new[i1+1:i2].decode()) - 1
-            print(new, i2)
+
             files[file_num].write(new[i2 + 1:])
 
             for i in range(num):
