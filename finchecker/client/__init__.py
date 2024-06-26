@@ -194,8 +194,13 @@ class Client(cmd.Cmd):
         plt.ylabel(self.locale.gettext('Number of requests'))
 
         plt.grid(True)
-        plt.savefig('picture.jpg')
-        im = Image.open("picture.jpg")
+
+        if not Path('generates').is_dir():
+            Path('generates').mkdir(parents=True, exist_ok=True)
+
+        plt.savefig('generates/statistics.jpg')
+
+        im = Image.open("generates/statistics.jpg")
         im.show()
 
     def do_EOF(self):
@@ -232,6 +237,10 @@ def recieve(conn, client, window):
             elif data[0] == "end" and data[1] == "file":
                 files[int(data[2])].close()
                 del files[int(data[2])]
+
+                if data[3] != '.csv':
+                    im = Image.open('generates/' + client.file_name[int(data[2])] + data[3])
+                    im.show()
         else:
             i1, i2 = 0, 0
             for i in range(100):
