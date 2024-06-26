@@ -266,7 +266,7 @@ def plot_correlation_table(correlation_table, filename):
     sns.heatmap(correlation_table, annot=True, cmap='coolwarm', linewidths=0.5)
     plt.title('Correlation Table')
     plt.xticks(rotation=45)
-    plt.tight_layout() 
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -301,7 +301,7 @@ def plot_stock_returns(returns, ticker, filename):
     plt.xlabel('Date')
     plt.ylabel('Returns')
     plt.xticks(rotation=45)
-    plt.tight_layout() 
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -336,7 +336,7 @@ def plot_dividends(dividends, ticker, filename):
     plt.xlabel('Date')
     plt.ylabel('Dividend')
     plt.xticks(rotation=45)
-    plt.tight_layout() 
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -441,7 +441,7 @@ def plot_stock_prices(ticker, start_date, end_date, filename):
     plt.xlabel('Date')
     plt.ylabel('Adjusted Close Price')
     plt.xticks(rotation=45)
-    plt.tight_layout() 
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
@@ -487,7 +487,7 @@ def predict_stock_price(ticker, start_date, end_date, forecast_days, filename):
     plt.ylabel('Adjusted Close Price')
     plt.legend()
     plt.xticks(rotation=45)
-    plt.tight_layout() 
+    plt.tight_layout()
     plt.savefig(filename, format='jpg')
     plt.close()
 
