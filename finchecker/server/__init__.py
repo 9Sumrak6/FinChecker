@@ -479,13 +479,15 @@ def predict_stock_price(ticker, start_date, end_date, forecast_days, filename):
 
     future_predictions = model.predict(future_dates_ordinal)
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     plt.plot(data.index, data['Adj Close'], label='Historical Prices')
     plt.plot(future_dates, future_predictions, label='Predicted Prices', linestyle='--')
     plt.title(f'{ticker} Stock Price Prediction')
     plt.xlabel('Date')
     plt.ylabel('Adjusted Close Price')
     plt.legend()
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
