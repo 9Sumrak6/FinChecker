@@ -505,6 +505,7 @@ def main():
             return
 
         client = Client(s)
+        client.do_EOF()
         window = ChatApp(name, client)
 
         rec = threading.Thread(target=recieve, args=(s, client, window))
@@ -515,5 +516,4 @@ def main():
 
         # client.cmdloop()
         app.exec_()
-        client.do_EOF()
 
