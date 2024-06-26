@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 from PIL import Image
 
 import xml.etree.ElementTree as ET
-from common import companies
+from ..common import companies
 from pathlib import Path
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFormLayout, QLabel, QLineEdit, QPushButton, \

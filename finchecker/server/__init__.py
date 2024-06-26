@@ -10,6 +10,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from ..common import companies
+
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -483,6 +485,10 @@ async def chat(reader, writer):
                 if query[0] == 'corr':
                     uid = query[1]
                     ticker = query[2:-2]
+
+                    for i in range(len(ticker)):
+                        ticker[i] = companies[ticker[i]]
+
                     start_date = query[-2]
                     end_date = query[-1]
                     correlation_table = get_correlation_table(ticker, start_date, end_date, 'correlation_table.csv')
@@ -491,7 +497,7 @@ async def chat(reader, writer):
                     await send_file(writer, uid, 'correlation_table', '.jpg')
                 elif query[0] == 'stock':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
                     returns = get_stock_returns(ticker, start_date, end_date, 'aapl_returns.csv')
@@ -500,7 +506,7 @@ async def chat(reader, writer):
                     await send_file(writer, uid, 'aapl_returns', '.jpg')
                 elif query[0] == 'dividends':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
                     dividends = get_dividends(ticker, start_date, end_date, 'aapl_dividends.csv')
@@ -509,37 +515,37 @@ async def chat(reader, writer):
                     await send_file(writer, uid, 'aapl_dividends', '.jpg')
                 elif query[0] == 'fin':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     get_financials(ticker, 'aapl_financials.csv')
                     await send_file(writer, uid, 'aapl_financials', '.csv')
                 elif query[0] == 'balance':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     get_balance_sheet(ticker, 'aapl_balance_sheet.csv')
                     await send_file(writer, uid, 'aapl_balance_sheet', '.csv')
                 elif query[0] == 'cash':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     get_cash_flow(ticker, 'aapl_cash_flow.csv')
                     await send_file(writer, uid, 'aapl_cash_flow', '.csv')
                 elif query[0] == 'recom':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     get_recommendations(ticker, 'aapl_recommendations.csv')
                     await send_file(writer, uid, 'aapl_recommendations', '.csv')
                 elif query[0] == 'm_hold':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     get_major_holders(ticker, 'aapl_major_holders.csv')
                     await send_file(writer, uid, 'aapl_major_holders', '.csv')
                 elif query[0] == 'i_hold':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     get_institutional_holders(ticker, 'aapl_institutional_holders.csv')
                     await send_file(writer, uid, 'aapl_institutional_holders', '.csv')
                 elif query[0] == 'graphics':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
                     plot_stock_prices(ticker, start_date, end_date, 'aapl_stock_prices.jpg')
@@ -547,7 +553,7 @@ async def chat(reader, writer):
                     #await send_file(writer, uid, "1.txt")
                 elif query[0] == 'predict':
                     uid = query[1]
-                    ticker = query[2]
+                    ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
                     forecast_days = int(query[5])
