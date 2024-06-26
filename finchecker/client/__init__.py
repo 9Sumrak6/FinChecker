@@ -244,20 +244,30 @@ class LoginFormApp(QMainWindow):
 class Parametres(QWidget):
     def __init__(self, cmd, client, lang='en_US.UTF-8'):
         super().__init__()
+        self.cmd = cmd
+        self.client = client
         self.locale = LOCALES[lang]
         self.start_date = ''
         self.end_date = ''
         self.filename = ''
         self.days = ''
-        self.cmd = cmd
-        self.client = client
-        self.only_ticker = ["financials", "balance sheet", "cash flow", "recommendations", "major holders",
+        self.only_ticker = []
+        self.other = []
+        self.extra = []
+
+        only_ticker = ["financials", "balance sheet", "cash flow", "recommendations", "major holders",
                        "institutional holders"]
-        self.other = ["correlation table", "stock returns", "dividends", "graphics"]
-        self.extra = ["predict"]
+        other = ["correlation table", "stock returns", "dividends", "graphics"]
+        extra = ["predict"]
+        for ticker in only_ticker:
+            self.only_ticker.append(self.locale.gettext(ticker))
+        for ticker in other:
+            self.other.append(self.locale.gettext(ticker))
+        for ticker in extra:
+            self.extra.append(self.locale.gettext(ticker))
 
         # Set the window properties (title and initial size)
-        self.setWindowTitle("Parametres for " + cmd)
+        self.setWindowTitle(self.locale.gettext("Parametres for ") + cmd)
         self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
 
         layout = QGridLayout()
@@ -268,21 +278,21 @@ class Parametres(QWidget):
         completer = QCompleter(names)
 
         # create line edit and add auto complete
-        lineedit_label = QLabel("Company:")
+        lineedit_label = QLabel(self.locale.gettext("Company:"))
         self.lineedit = QLineEdit()
         self.lineedit.setCompleter(completer)
         layout.addWidget(lineedit_label, 0, 0)
         layout.addWidget(self.lineedit, 0, 1)
 
-        start_date_label = QLabel("Start date:")
+        start_date_label = QLabel(self.locale.gettext("Start date:"))
         self.start_date_field = QLineEdit()
-        self.start_date_field.setPlaceholderText("Date format: YYYY-MM-DD")
-        end_date_label = QLabel("End date:")
+        self.start_date_field.setPlaceholderText(self.locale.gettext("Date format: YYYY-MM-DD"))
+        end_date_label = QLabel(self.locale.gettext("End date:"))
         self.end_date_field = QLineEdit()
-        self.end_date_field.setPlaceholderText("Date format: YYYY-MM-DD")
-        days_label = QLabel("The number of days to predict:")
+        self.end_date_field.setPlaceholderText(self.locale.gettext("Date format: YYYY-MM-DD"))
+        days_label = QLabel(self.locale.gettext("The number of days to predict:"))
         self.days_field = QLineEdit()
-        filename_label = QLabel("File name:")
+        filename_label = QLabel(self.locale.gettext("File name:"))
         self.filename_field = QLineEdit()
 
         if cmd in self.other or cmd in self.extra:
@@ -296,7 +306,7 @@ class Parametres(QWidget):
         layout.addWidget(filename_label, 4, 0)
         layout.addWidget(self.filename_field, 4, 1)
 
-        submit_button = QPushButton("Submit")
+        submit_button = QPushButton(self.locale.gettext("Submit"))
         submit_button.clicked.connect(self.submit)
         layout.addWidget(submit_button)
 
@@ -317,17 +327,19 @@ class Parametres(QWidget):
             self.end_date = end_date
             self.days = days
             self.client.do_req(self.cmd, self.filename, f"AMZN {self.start_date} {self.end_date} {self.days}")
-            QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
+            QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
+                                    self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
         elif self.cmd not in self.other:
             self.client.do_req(self.cmd, self.filename, "AMZN")
-            QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
+            QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
+                                    self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
         elif check_data(start_date) and check_data(end_date):
             self.start_date = start_date
             self.end_date = end_date
             self.client.do_req(self.cmd, self.filename, f"AMZN {self.start_date} {self.end_date}")
-            QMessageBox.information(self, self.cmd + "made Successfully", "Check file " + self.filename + " in folder")
+            QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"), self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
         else:
-            QMessageBox.warning(self, "Fail", "Incorrect date format. Please try again.")
+            QMessageBox.warning(self, self.locale.gettext("Fail"), self.locale.gettext("Incorrect date format. Please try again."))
 
 
 class ChatApp(QMainWindow):
