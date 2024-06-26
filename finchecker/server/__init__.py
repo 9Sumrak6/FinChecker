@@ -435,11 +435,13 @@ def plot_stock_prices(ticker, start_date, end_date, filename):
     :param filename: имя файла для сохранения
     """
     data = yf.download(ticker, start=start_date, end=end_date)
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(16, 9))
     plt.plot(data['Adj Close'])
     plt.title(f'{ticker} Stock Prices')
     plt.xlabel('Date')
     plt.ylabel('Adjusted Close Price')
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
