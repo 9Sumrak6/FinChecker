@@ -203,7 +203,7 @@ class Client(cmd.Cmd):
         :param msg: message
         """
         update_stat(self.cur_path_xml, self.tree, self.root, "sayall")
-        self.conn.sendall(("sayall " + msg + "\n").encode())
+        self.conn.sendall(("sayall;" + msg + "\n").encode())
 
     def do_vis(self):
         """Visualise users activity."""
@@ -234,9 +234,11 @@ class Client(cmd.Cmd):
         im = Image.open("generates/statistics.jpg")
         im.show()
 
-    def do_EOF(self):
+    def do_EOF(self, fl):
         """End client activity."""
-        reset_stat(self.cur_path_xml, self.tree, self.root, False)
+        if fl:
+            reset_stat(self.cur_path_xml, self.tree, self.root, False)
+
         return True
 
 
@@ -375,7 +377,7 @@ class LoginFormApp(QMainWindow):
         print(username)
         ans = self.socket.recv(1024).decode()
 
-        if ans == 'off':
+        if ans == 'off\n':
             QMessageBox.warning(self, self.locale.gettext("Login Failed"),
                                 self.locale.gettext("Invalid username or password. Please try again."))
             self.username = ''
@@ -659,7 +661,7 @@ def main():
             return
 
         client = Client(s)
-        client.do_EOF()
+        client.do_EOF(False)
         window = ChatApp(name, client, lang)
 
         rec = threading.Thread(target=recieve, args=(s, client, window))
@@ -670,3 +672,4 @@ def main():
 
         # client.cmdloop()
         app.exec_()
+        client.do_EOF(True)

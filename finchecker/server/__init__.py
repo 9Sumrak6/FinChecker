@@ -565,7 +565,7 @@ async def chat(reader, writer):
         create_folder("server_generates")
 
     while name in clients_names or not login(name, pswd):
-        writer.write("off".encode())
+        writer.write("off\n".encode())
         await writer.drain()
 
         register = await reader.readline()
@@ -595,15 +595,36 @@ async def chat(reader, writer):
             if q is send:
                 query = q.result().decode()
                 query = query.strip().split(';')
-                q = query[2].split(',')
-                print(query, q)
 
                 if len(query) == 0:
                     writer.write("Command is incorrect.\n".encode())
                     continue
 
-                print(query)
                 update_stat(name, query[0])
+                print(query)
+                if query[0] == 'sayall':
+                    for i in clients_names:
+                        if i == name:
+                            continue
+
+                        await clients_conns[i].put('say ' + query[1])
+
+                    send = asyncio.create_task(reader.readline())
+                    continue
+                elif query[0] == 'EOF':
+                    send.cancel()
+                    receive.cancel()
+                    writer.close()
+
+                    clients_names.remove(name)
+
+                    return
+
+                try:
+                    q = query[2].split(',')
+                except Exception:
+                    pass
+
                 if query[0] == 'corr':
                     uid = query[1]
                     ticker = q
@@ -695,20 +716,6 @@ async def chat(reader, writer):
                     full_path = f"server_generates/{name}/aapl_price_prediction"
                     predict_stock_price(ticker, start_date, end_date, forecast_days, filename=f'{full_path}.jpg')
                     await send_file(writer, uid, full_path, '.jpg')
-                elif query[0] == 'sayall':
-                    for i in clients_names:
-                        if i == name:
-                            continue
-
-                        await clients_conns[i].put('say ' + " ".join(query[1:]))
-                elif query[0] == 'EOF':
-                    send.cancel()
-                    receive.cancel()
-                    writer.close()
-
-                    clients_names.remove(name)
-
-                    return
                 else:
                     print("skip")
 

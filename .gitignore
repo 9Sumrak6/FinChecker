@@ -8,6 +8,6 @@ server_generates
 *.csv
 *.xls*
 *.xml
-
+*build*
 */*/*.xml
 */*/__pycache__
