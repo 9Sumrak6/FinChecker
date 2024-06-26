@@ -643,7 +643,7 @@ async def chat(reader, writer):
                     await send_file(writer, uid, full_path, '.jpg')
                 elif query[0] == 'fin':
                     uid = query[1]
-                    ticker = companies[query[2]]
+                    ticker = companies[query[2].strip()]
                     full_path = f"server_generates/{name}/aapl_financials"
                     get_financials(ticker, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
