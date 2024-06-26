@@ -6,6 +6,8 @@ server_generates
 *.jpeg
 *.txt
 *.csv
+!/tests_files/*.csv
+!/tests_files/*.jpg
 *.xls*
 *.xml
 *build*
