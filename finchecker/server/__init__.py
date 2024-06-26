@@ -1,14 +1,110 @@
 """Init file with all functionality for server."""
 
 import asyncio
+
 import yfinance as yf
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
+
+full_name = {
+        'correlation table': 'corr',
+        'stock returns': 'stock',
+        'dividends': 'dividends',
+        'financials': 'fin',
+        'balance sheet': 'balance',
+        'cash flow': 'cash',
+        'recommendations': 'recom',
+        'major holders': 'm_hold',
+        'institutional holders': 'i_hold',
+        'graphics': 'graphics',
+        'sayall': 'sayall',
+        'predict': 'predict'
+    }
+
+path_xml = str(Path(__file__).parent.resolve()) + '/stat.xml'
+tree = ''
+root = ''
+
+
+def indent(elem, level=0):
+    i = "\n" + level*"  "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "  "
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+        for elem in elem:
+            indent(elem, level+1)
+        if not elem.tail or not elem.tail.strip():
+            elem.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+
+
+def create_xml():
+    global tree, root, path_xml
+    if not Path(path_xml).is_file():
+        root = ET.Element("statistics")
+        tree = ET.ElementTree(root)
+        indent(root)
+
+        tree.write(path_xml, encoding="utf-8", xml_declaration=True)
+
+    tree = ET.parse(path_xml)
+    root = tree.getroot()
+
+    return True
+
+
+def add_user(username, full_name):
+    global tree, root, path_xml
+
+    for child in root:
+        if child.get('id') == username:
+            return False
+
+    field = ET.SubElement(root, "user")
+    field.set("id", username)
+
+    for i in full_name:
+        f = ET.SubElement(field, "_".join(i.split()))
+        f.text = "0"
+        f.set('updated', 'no')
+
+    tree = ET.ElementTree(root)
+    indent(root)
+    tree.write(path_xml, encoding="utf-8", xml_declaration=True)
+
+    return True
+
+def update_stat(name, cmd):
+    global tree, root, path_xml
+    for i in full_name:
+        if full_name[i] == cmd:
+            cmd = i
+            break
+
+    for user in root:
+        if user.get('id') == name:
+            for command in user:
+                if command.tag == cmd:
+                    command.text = str(int(command.text) + 1)
+                    command.set("updated", "yes")
+                    break
+
+    tree = ET.ElementTree(root)
+    indent(root)
+    tree.write(path_xml)
 
 async def send_file(writer, uid, filename, ext):
     """
@@ -287,7 +383,7 @@ async def chat(reader, writer):
     :param reader: inpurt stream from socket
     :param writer: output stream to socket
     """
-    global clients_names, clients_conns, clients_locales
+    global clients_names, clients_conns, clients_locales, tree, root, full_name
 
     me = "{}:{}".format(*writer.get_extra_info('peername'))
 
@@ -302,6 +398,8 @@ async def chat(reader, writer):
         name = name.decode()[:-1]
 
     clients_names.add(name)
+
+    add_user(name, full_name)
 
     writer.write("in".encode())
     await writer.drain()
@@ -318,11 +416,12 @@ async def chat(reader, writer):
             if q is send:
                 query = q.result().decode().strip().split()
                 print(query)
-
                 if len(query) == 0:
                     writer.write("Command is incorrect.\n".encode())
                     continue
-                elif query[0] == 'corr':
+
+                update_stat(name, query[0])
+                if query[0] == 'corr':
                     uid = query[1]
                     ticker = query[2]
                     start_date = query[3]
@@ -436,4 +535,5 @@ async def run_server():
 
 def main():
     """Start server activity."""
+    create_xml()
     asyncio.run(run_server())
