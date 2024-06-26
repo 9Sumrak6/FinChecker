@@ -10,6 +10,8 @@ server_generates
 !/tests_files/*.jpg
 *.xls*
 *.xml
+*.pot
+*.mo
 *build*
 */*/*.xml
 */*/__pycache__
