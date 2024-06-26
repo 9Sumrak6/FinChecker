@@ -6,5 +6,7 @@
 *.csv
 *.xls*
 *.xml
+finchecker/client/stat.xml
+finchecker/server/stat.xml
+finchecker/client/login.xml
 */*/__pycache__
-*/*/*.xml
