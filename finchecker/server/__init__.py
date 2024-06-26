@@ -45,6 +45,12 @@ root_login = ''
 
 
 def indent(elem, level=0):
+    """
+    Make indent in xml files.
+
+    :param elem: watching element
+    :param level: level of element
+    """
     i = "\n" + level*"  "
     if len(elem):
         if not elem.text or not elem.text.strip():
@@ -61,6 +67,7 @@ def indent(elem, level=0):
 
 
 def create_xml():
+    """Create xml pattern for statistics and login."""
     global tree, root, path_xml, path_login, tree_login, root_login
 
     if not Path(path_xml).is_file():
@@ -87,6 +94,13 @@ def create_xml():
 
 
 def add_user(username, pswd, full_name):
+    """
+    Add user.
+
+    :param username: name of user
+    :param pswd: user's password
+    :param full_name: dictionary of commands
+    """
     global tree, root, path_xml, tree_login, root_login, path_login
 
     for child in root_login:
@@ -117,6 +131,12 @@ def add_user(username, pswd, full_name):
 
 
 def login(username, pswd):
+    """
+    Login user.
+
+    :param username: name of user
+    :param pswd: user's password
+    """
     global tree_login, root_login, path_login
 
     for child in root_login:
@@ -130,6 +150,12 @@ def login(username, pswd):
 
 
 def update_stat(name, cmd):
+    """
+    Update users activity.
+
+    :param name: name of user
+    :param cmd: executed command
+    """
     global tree, root, path_xml
     for i in full_name:
         if full_name[i] == cmd:
@@ -150,6 +176,7 @@ def update_stat(name, cmd):
 
 
 def plot_statistics():
+    """Plot statistics in the end of server work."""
     global tree, root, path_xml
 
     cmds = dict()
@@ -184,7 +211,6 @@ def plot_statistics():
     im = Image.open("server_generates/statistics.jpg")
 
     im.show()
-
 
 
 async def send_file(writer, uid, filename, ext):
@@ -492,6 +518,11 @@ clients_locales = dict()
 
 
 def cut_login(register):
+    """
+    Cut entered login.
+
+    :param register: entered command
+    """
     name, pswd = '', ''
 
     for i in range(4, len(register)):
