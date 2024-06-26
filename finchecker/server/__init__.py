@@ -679,7 +679,7 @@ async def chat(reader, writer):
                     await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'graphics':
                     uid = query[1]
-                    ticker = companies[query[2]]
+                    ticker = companies[query[2].strip()]
                     start_date = query[3]
                     end_date = query[4]
                     full_path = f"server_generates/{name}/aapl_stock_prices"
