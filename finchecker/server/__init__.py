@@ -166,7 +166,7 @@ async def send_file(writer, uid, filename, ext):
 
     await asyncio.sleep(0.1)
 
-    writer.write(f"end file {uid}\n".encode())
+    writer.write(f"end file {uid} {ext}\n".encode())
     await writer.drain()
 
     f.close()
