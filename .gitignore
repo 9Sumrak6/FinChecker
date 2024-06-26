@@ -1,3 +1,6 @@
+generates
+server_generates
+
 *.lock
 *.png
 *.jpg
@@ -6,7 +9,6 @@
 *.csv
 *.xls*
 *.xml
-finchecker/client/stat.xml
-finchecker/server/stat.xml
-finchecker/client/login.xml
+
+*/*/*.xml
 */*/__pycache__
