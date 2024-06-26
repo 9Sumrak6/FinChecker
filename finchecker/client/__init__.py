@@ -67,23 +67,23 @@ def update_stat(filename, tree, root, tag):
     # tree = ET.parse(filename)
     # root = tree.getroot()
 
-    for cmd in root.findall(tag):
-        cmd.text = str(int(cmd.text) + 1)
-        cmd.set('updated', 'yes')
+    for command in root.findall(tag):
+        command.text = str(int(command.text) + 1)
+        command.set('updated', 'yes')
 
     tree.write(filename)
 
 
 def get_stat(filename, tree, root, tag):
-    for cmd in root.findall(tag):
-        return int(cmd.text)
+    for command in root.findall(tag):
+        return int(command.text)
 
 
 def reset_stat(filename, tree, root, clear=False):
-    for cmd in root:
+    for command in root:
         if clear:
-            cmd.text = "0"
-        cmd.set('updated', 'no')
+            command.text = "0"
+        command.set('updated', 'no')
 
     tree.write(filename)
 
@@ -205,10 +205,10 @@ class Client(cmd.Cmd):
 def recieve(conn, client, window):
     """
     Recieve the messages from server in another thread.
-    
+
     :param conn: socket to server
     :param client: class Client
-    :param window: GUI window 
+    :param window: GUI window
     """
     files = dict()
 
@@ -316,12 +316,13 @@ class LoginFormApp(QMainWindow):
 
         # get reserved usernames from server
         self.socket.sendall(('usr ' + username + ' /pswd/ ' + password + '\n').encode())
-        #self.socket.sendall((password + '\n').encode())
+        # self.socket.sendall((password + '\n').encode())
         print(username)
         ans = self.socket.recv(1024).decode()
 
         if ans == 'off':
-            QMessageBox.warning(self, self.locale.gettext("Login Failed"), self.locale.gettext("Invalid username or password. Please try again."))
+            QMessageBox.warning(self, self.locale.gettext("Login Failed"),
+                                self.locale.gettext("Invalid username or password. Please try again."))
             self.username = ''
             self.password = ''
         # send new username to server
@@ -331,7 +332,8 @@ class LoginFormApp(QMainWindow):
             self.username = username
             self.password = password
             self.close()
-            QMessageBox.information(self, self.locale.gettext("Login Successful"), self.locale.gettext("Welcome, ") + username + "!")
+            QMessageBox.information(self, self.locale.gettext("Login Successful"),
+                                    self.locale.gettext("Welcome, ") + username + "!")
 
 
 class Parametres(QWidget):
@@ -420,20 +422,26 @@ class Parametres(QWidget):
             self.start_date = start_date
             self.end_date = end_date
             self.days = days
-            self.client.do_req(self.cmd, self.filename, f"{self.lineedit} {self.start_date} {self.end_date} {self.days}")
+            self.client.do_req(self.cmd, self.filename,
+                               f"{self.lineedit} {self.start_date} {self.end_date} {self.days}")
             QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
-                                    self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
+                                    self.locale.gettext("Check file ") + self.filename +
+                                    self.locale.gettext(" in folder"))
         elif self.cmd not in self.other:
             self.client.do_req(self.cmd, self.filename, self.lineedit)
             QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
-                                    self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
+                                    self.locale.gettext("Check file ") + self.filename +
+                                    self.locale.gettext(" in folder"))
         elif check_data(start_date) and check_data(end_date):
             self.start_date = start_date
             self.end_date = end_date
             self.client.do_req(self.cmd, self.filename, f"{self.lineedit} {self.start_date} {self.end_date}")
-            QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"), self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
+            QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
+                                    self.locale.gettext("Check file ") + self.filename +
+                                    self.locale.gettext(" in folder"))
         else:
-            QMessageBox.warning(self, self.locale.gettext("Fail"), self.locale.gettext("Incorrect date format. Please try again."))
+            QMessageBox.warning(self, self.locale.gettext("Fail"),
+                                self.locale.gettext("Incorrect date format. Please try again."))
 
 
 class ChatApp(QMainWindow):
@@ -468,10 +476,10 @@ class ChatApp(QMainWindow):
             locale_names.append(self.locale.gettext(name))
 
         completer = QCompleter(locale_names)
-        lineedit_label = QLabel(self.locale.gettext("Command"))
         self.lineedit = QLineEdit()
+        self.lineedit.setPlaceholderText(self.locale.gettext("Command"))
         self.lineedit.setCompleter(completer)
-        new_layout.addWidget(self.lineedit, 0, 0)
+        new_layout.addWidget(self.lineedit, 0, 1)
 
         # Create a QPushButton for login
         submit_button = QPushButton(self.locale.gettext("Submit"))
@@ -567,4 +575,3 @@ def main():
 
         # client.cmdloop()
         app.exec_()
-
