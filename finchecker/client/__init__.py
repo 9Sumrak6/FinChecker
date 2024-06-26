@@ -172,7 +172,7 @@ def recieve(conn, client, window):
             data = new.decode().split()
 
             if data[0] == 'beg' and data[1] == 'file':
-                files[int(data[2])] = open(client.file_name[int(data[2])], "wb")
+                files[int(data[2])] = open(client.file_name[int(data[2])] + data[3], "wb")
             elif data[0] == "end" and data[1] == "file":
                 files[int(data[2])].close()
                 del files[int(data[2])]
