@@ -1,8 +1,8 @@
 <statistics>
-  <correlation_table updated="yes">1</correlation_table>
+  <correlation_table updated="yes">2</correlation_table>
   <stock_returns updated="no">0</stock_returns>
   <dividends updated="no">0</dividends>
-  <financials updated="no">0</financials>
+  <financials updated="yes">1</financials>
   <balance_sheet updated="no">0</balance_sheet>
   <cash_flow updated="no">0</cash_flow>
   <recommendations updated="no">0</recommendations>

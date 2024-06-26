@@ -460,6 +460,9 @@ async def chat(reader, writer):
 
     name, pswd = cut_login(register)
 
+    if not os.path.isdir("server_generates"):
+        create_folder("server_generates")
+
     while name in clients_names or not login(name, pswd):
         writer.write("off".encode())
         await writer.drain()
@@ -470,7 +473,8 @@ async def chat(reader, writer):
         name, pswd = cut_login(register)
 
     clients_names.add(name)
-    create_folder(name)
+    if not os.path.isdir(f'server_generates/{name}'):
+        create_folder(f'server_generates/{name}')
     clients_pswd[name] = pswd
 
     add_user(name, pswd, full_name)
@@ -508,10 +512,10 @@ async def chat(reader, writer):
 
                     start_date = query[-2]
                     end_date = query[-1]
-                    full_path = f"{name}/correlation_table"
+                    full_path = f"server_generates/{name}/correlation_table"
                     correlation_table = get_correlation_table(ticker, start_date, end_date, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
-                    full_path = f"{name}/correlation_table"
+                    full_path = f"server_generates/{name}/correlation_table"
                     plot_correlation_table(correlation_table, f'{full_path}.jpg')
                     await send_file(writer, uid, full_path, '.jpg')
                 elif query[0] == 'stock':
@@ -519,10 +523,10 @@ async def chat(reader, writer):
                     ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
-                    full_path = f"{name}/aapl_returns"
+                    full_path = f"server_generates/{name}/aapl_returns"
                     returns = get_stock_returns(ticker, start_date, end_date, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
-                    full_path = f"{name}/aapl_returns"
+                    full_path = f"server_generates/{name}/aapl_returns"
                     plot_stock_returns(returns, ticker, f'{full_path}.jpg')
                     await send_file(writer, uid, full_path, '.jpg')
                 elif query[0] == 'dividends':
@@ -530,46 +534,46 @@ async def chat(reader, writer):
                     ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
-                    full_path = f"{name}/aapl_dividends"
+                    full_path = f"server_generates/{name}/aapl_dividends"
                     dividends = get_dividends(ticker, start_date, end_date, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
-                    full_path = f"{name}/aapl_dividends"
+                    full_path = f"server_generates/{name}/aapl_dividends"
                     plot_dividends(dividends, ticker, f'{full_path}.jpg')
                     await send_file(writer, uid, full_path, '.jpg')
                 elif query[0] == 'fin':
                     uid = query[1]
                     ticker = companies[query[2]]
-                    full_path = f"{name}/aapl_financials"
+                    full_path = f"server_generates/{name}/aapl_financials"
                     get_financials(ticker, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'balance':
                     uid = query[1]
                     ticker = companies[query[2]]
-                    full_path = f"{name}/aapl_balance_sheet"
+                    full_path = f"server_generates/{name}/aapl_balance_sheet"
                     get_balance_sheet(ticker, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'cash':
                     uid = query[1]
                     ticker = companies[query[2]]
-                    full_path = f"{name}/aapl_cash_flow"
+                    full_path = f"server_generates/{name}/aapl_cash_flow"
                     get_cash_flow(ticker, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'recom':
                     uid = query[1]
                     ticker = companies[query[2]]
-                    full_path = f"{name}/aapl_recommendations"
+                    full_path = f"server_generates/{name}/aapl_recommendations"
                     get_recommendations(ticker, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'm_hold':
                     uid = query[1]
                     ticker = companies[query[2]]
-                    full_path = f"{name}/aapl_major_holders"
+                    full_path = f"server_generates/{name}/aapl_major_holders"
                     get_major_holders(ticker, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'i_hold':
                     uid = query[1]
                     ticker = companies[query[2]]
-                    full_path = f"{name}/aapl_institutional_holders"
+                    full_path = f"server_generates/{name}/aapl_institutional_holders"
                     get_institutional_holders(ticker, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'graphics':
@@ -577,7 +581,7 @@ async def chat(reader, writer):
                     ticker = companies[query[2]]
                     start_date = query[3]
                     end_date = query[4]
-                    full_path = f"{name}/aapl_stock_prices"
+                    full_path = f"server_generates/{name}/aapl_stock_prices"
                     plot_stock_prices(ticker, start_date, end_date, f'{full_path}.jpg')
                     await send_file(writer, uid, full_path, '.jpg')
                     #await send_file(writer, uid, "1.txt")
@@ -587,7 +591,7 @@ async def chat(reader, writer):
                     start_date = query[3]
                     end_date = query[4]
                     forecast_days = int(query[5])
-                    full_path = f"{name}/aapl_price_prediction"
+                    full_path = f"server_generates/{name}/aapl_price_prediction"
                     predict_stock_price(ticker, start_date, end_date, forecast_days, filename=f'{full_path}.jpg')
                     await send_file(writer, uid, full_path, '.jpg')
                 elif query[0] == 'sayall':
