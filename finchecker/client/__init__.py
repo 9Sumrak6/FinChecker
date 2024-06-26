@@ -208,6 +208,9 @@ class LoginFormApp(QMainWindow):
         # Create QLabel and QLineEdit widgets for username
         username_label = QLabel(self.locale.gettext("Username:"))
         self.username_field = QLineEdit()
+        password_label = QLabel(self.locale.gettext("Password:"))
+        self.password_field = QLineEdit()
+        self.password_field.setEchoMode(QLineEdit.Password)
 
         # Create a QPushButton for login
         login_button = QPushButton(self.locale.gettext("Login"))
@@ -215,6 +218,7 @@ class LoginFormApp(QMainWindow):
 
         # Add widgets to the form layout
         form_layout.addRow(username_label, self.username_field)
+        form_layout.addRow(password_label, self.password_field)
         form_layout.addRow(login_button)
 
         # Set the layout for the central widget
@@ -223,20 +227,23 @@ class LoginFormApp(QMainWindow):
     def login(self):
         # Retrieve the username and password entered by the user
         username = self.username_field.text()
+        password = self.password_field.text()
 
         # get reserved usernames from server
-        self.socket.sendall((username + '\n').encode())
+        self.socket.sendall((username + '\n' + password + '\n').encode())
         print(username)
         ans = self.socket.recv(1024).decode()
 
         if ans == 'off':
-            QMessageBox.warning(self, self.locale.gettext("Login Failed"), self.locale.gettext("Username already in use. Please try again."))
+            QMessageBox.warning(self, self.locale.gettext("Login Failed"), self.locale.gettext("Invalid username or password. Please try again."))
             self.username = ''
+            self.password = ''
         # send new username to server
         # Check if the username and password are valid (for demonstration purposes)
         # if username not in usernames_in_use:
         else:
             self.username = username
+            self.password = password
             self.close()
             QMessageBox.information(self, self.locale.gettext("Login Successful"), self.locale.gettext("Welcome, ") + username + "!")
 
