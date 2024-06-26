@@ -4,6 +4,7 @@ import socket
 import sys
 import cmd
 import threading
+import gettext
 
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -12,6 +13,13 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFormLayout, QLa
     QMessageBox, QVBoxLayout, QScrollArea, QGridLayout, QCompleter
 from PyQt5.QtCore import Qt
 from datetime import date
+
+
+PO_PATH = Path(__file__).resolve().parent / 'po'
+LOCALES = {
+    "ru_RU.UTF-8": gettext.translation("gui", PO_PATH, ["ru"]),
+    "en_US.UTF-8": gettext.NullTranslations(),
+}
 
 
 def update_stat(filename, tree, root, tag):
@@ -180,13 +188,14 @@ def check_data(inp: str) -> bool:
 
 
 class LoginFormApp(QMainWindow):
-    def __init__(self, socket):
+    def __init__(self, socket, lang='en_US.UTF-8'):
         super().__init__()
         self.username = ''
         self.socket = socket
+        self.locale = LOCALES[lang]
 
         # Set the window properties (title and initial size)
-        self.setWindowTitle("Login Form")
+        self.setWindowTitle(self.locale.gettext("Login Form"))
         self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
 
         # Create a central widget for the main window
@@ -197,11 +206,11 @@ class LoginFormApp(QMainWindow):
         form_layout = QFormLayout()
 
         # Create QLabel and QLineEdit widgets for username
-        username_label = QLabel("Username:")
+        username_label = QLabel(self.locale.gettext("Username:"))
         self.username_field = QLineEdit()
 
         # Create a QPushButton for login
-        login_button = QPushButton("Login")
+        login_button = QPushButton(self.locale.gettext("Login"))
         login_button.clicked.connect(self.login)
 
         # Add widgets to the form layout
@@ -221,7 +230,7 @@ class LoginFormApp(QMainWindow):
         ans = self.socket.recv(1024).decode()
 
         if ans == 'off':
-            QMessageBox.warning(self, "Login Failed", "Username already in use. Please try again.")
+            QMessageBox.warning(self, self.locale.gettext("Login Failed"), self.locale.gettext("Username already in use. Please try again."))
             self.username = ''
         # send new username to server
         # Check if the username and password are valid (for demonstration purposes)
@@ -229,12 +238,13 @@ class LoginFormApp(QMainWindow):
         else:
             self.username = username
             self.close()
-            QMessageBox.information(self, "Login Successful", "Welcome, " + username + "!")
+            QMessageBox.information(self, self.locale.gettext("Login Successful"), self.locale.gettext("Welcome, ") + username + "!")
 
 
 class Parametres(QWidget):
-    def __init__(self, cmd, client):
+    def __init__(self, cmd, client, lang='en_US.UTF-8'):
         super().__init__()
+        self.locale = LOCALES[lang]
         self.start_date = ''
         self.end_date = ''
         self.filename = ''
@@ -321,8 +331,9 @@ class Parametres(QWidget):
 
 
 class ChatApp(QMainWindow):
-    def __init__(self, name, client):
+    def __init__(self, name, client, lang='en_US.UTF-8'):
         super().__init__()
+        self.locale = LOCALES[lang]
         self.username = name
         self.client = client
         self.cmd = ''
