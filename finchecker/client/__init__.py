@@ -21,10 +21,10 @@ from PyQt5.QtCore import Qt
 from datetime import date
 
 
-PO_PATH = Path(__file__).resolve().parent / 'po'
+PO_PATH = str(os.path.dirname(__file__) + '/../po')
 LOCALES = {
-    # "ru_RU.UTF-8": gettext.translation("gui", PO_PATH, ["ru"]),
-    "ru_RU.UTF-8": gettext.NullTranslations(),
+    "ru_RU.UTF-8": gettext.translation("gui", PO_PATH, ["ru"]),
+    # "ru_RU.UTF-8": gettext.NullTranslations(),
     "en_US.UTF-8": gettext.NullTranslations(),
 }
 
@@ -44,6 +44,7 @@ def indent(elem, level=0):
         if level and (not elem.tail or not elem.tail.strip()):
             elem.tail = i
 
+
 def create_xml(path, full_name):
     if Path(path).is_file():
         return True
@@ -60,6 +61,7 @@ def create_xml(path, full_name):
     tree.write(path, encoding="utf-8", xml_declaration=True)
 
     return True
+
 
 def update_stat(filename, tree, root, tag):
     # tree = ET.parse(filename)
@@ -124,7 +126,7 @@ class Client(cmd.Cmd):
         'predict'
     ]
 
-    def __init__(self, conn, stdin=sys.stdin):
+    def __init__(self, conn, lang='ru_RU.UTF-8', stdin=sys.stdin):
         """
         Initialize variables.
 
@@ -135,7 +137,7 @@ class Client(cmd.Cmd):
         super().__init__(stdin=stdin)
 
         self.conn = conn
-
+        self.locale = LOCALES[lang]
         self.cur_path_xml = str(Path(__file__).parent.resolve()) + '/stat.xml'
 
         create_xml(self.cur_path_xml, Client.full_name)
@@ -182,12 +184,12 @@ class Client(cmd.Cmd):
 
         plt.figure(figsize=(10, 5))
 
-        plt.title('Statistics of requests', fontsize=15)
+        plt.title(self.locale.gettext('Statistics of requests'), fontsize=15)
 
         sns.barplot(df, x=df.country, y=df.num)
 
-        plt.xlabel('Request')
-        plt.ylabel('Number of requests')
+        plt.xlabel(self.locale.gettext('Request'))
+        plt.ylabel(self.locale.gettext('Number of requests'))
 
         plt.grid(True)
         plt.savefig('picture.jpg')
@@ -271,7 +273,7 @@ def check_data(inp: str) -> bool:
 
 
 class LoginFormApp(QMainWindow):
-    def __init__(self, socket, lang='en_US.UTF-8'):
+    def __init__(self, socket, lang='ru_RU.UTF-8'):
         super().__init__()
         self.username = ''
         self.socket = socket
@@ -333,7 +335,7 @@ class LoginFormApp(QMainWindow):
 
 
 class Parametres(QWidget):
-    def __init__(self, cmd, client, lang='en_US.UTF-8'):
+    def __init__(self, cmd, client, lang='ru_RU.UTF-8'):
         super().__init__()
         self.cmd = cmd
         self.client = client
@@ -435,7 +437,7 @@ class Parametres(QWidget):
 
 
 class ChatApp(QMainWindow):
-    def __init__(self, name, client, lang='en_US.UTF-8'):
+    def __init__(self, name, client, lang='ru_RU.UTF-8'):
         super().__init__()
         self.locale = LOCALES[lang]
         self.username = name
@@ -506,6 +508,7 @@ class ChatApp(QMainWindow):
         self.cmd = self.lineedit.text()
         if self.cmd == "statistics":
             self.client.do_vis()
+            return
         self.w = Parametres(self.cmd, self.client)
         self.w.show()
 
