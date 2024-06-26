@@ -322,10 +322,10 @@ class LoginFormApp(QMainWindow):
 
     def __init__(self, socket, lang='ru_RU.UTF-8'):
         """
-            Create visualization of LoginFormApp.
+        Create visualization of LoginFormApp.
 
-            :param socket: socket
-            :param lang: locale language
+        :param socket: socket
+        :param lang: locale language
         """
         super().__init__()
         self.username = ''
@@ -395,11 +395,11 @@ class Parameters(QWidget):
 
     def __init__(self, cmd, client, lang='ru_RU.UTF-8'):
         """
-            Create visualization of parameters.
+        Create visualization of parameters.
 
-            :param cmd: command from ChatApp
-            :param client: object of Client class
-            :param lang: locale language
+        :param cmd: command from ChatApp
+        :param client: object of Client class
+        :param lang: locale language
         """
         super().__init__()
         self.cmd = cmd
@@ -513,11 +513,11 @@ class ChatApp(QMainWindow):
 
     def __init__(self, name, client, lang='ru_RU.UTF-8'):
         """
-            Create visualization of functionality.
+        Create visualization of functionality.
 
-            :param name: client name
-            :param client: object of Client class
-            :param lang: locale language
+        :param name: client name
+        :param client: object of Client class
+        :param lang: locale language
         """
         super().__init__()
         self.locale = LOCALES[lang]
@@ -608,9 +608,9 @@ class ChatApp(QMainWindow):
 
     def get_msg(self, msg):
         """
-            Recieve new message and update display.
+        Recieve new message and update display.
 
-            :param msg: message from client
+        :param msg: message from client
         """
         self.chat_history.append(msg)
 
