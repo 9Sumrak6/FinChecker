@@ -7,6 +7,7 @@ import threading
 import gettext
 
 import xml.etree.ElementTree as ET
+from common import companies
 from pathlib import Path
 
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFormLayout, QLabel, QLineEdit, QPushButton, \
@@ -317,12 +318,12 @@ class Parametres(QWidget):
         self.setLayout(layout)
 
         # auto complete options
-        names = ["AMAZON", "GOOGLE"]
+        names = companies.keys()
         completer = QCompleter(names)
 
         # create line edit and add auto complete
         lineedit_label = QLabel(self.locale.gettext("Company:"))
-        self.lineedit = QLineEdit()
+        self.lineedit_field = QLineEdit()
         self.lineedit.setCompleter(completer)
         layout.addWidget(lineedit_label, 0, 0)
         layout.addWidget(self.lineedit, 0, 1)
@@ -369,7 +370,7 @@ class Parametres(QWidget):
             self.start_date = start_date
             self.end_date = end_date
             self.days = days
-            self.client.do_req(self.cmd, self.filename, f"AMZN {self.start_date} {self.end_date} {self.days}")
+            self.client.do_req(self.cmd, self.filename, f"{} {self.start_date} {self.end_date} {self.days}")
             QMessageBox.information(self, self.cmd + self.locale.gettext("made Successfully"),
                                     self.locale.gettext("Check file ") + self.filename + self.locale.gettext(" in folder"))
         elif self.cmd not in self.other:
