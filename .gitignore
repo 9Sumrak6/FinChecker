@@ -2,7 +2,6 @@ generates
 server_generates
 
 *.lock
-*.png
 *.jpg
 *.jpeg
 *.txt
