@@ -22,6 +22,7 @@ LOCALES = {
     "en_US.UTF-8": gettext.NullTranslations(),
 }
 
+
 def indent(elem, level=0):
     i = "\n" + level*"  "
     if len(elem):
@@ -264,7 +265,8 @@ class LoginFormApp(QMainWindow):
         password = self.password_field.text()
 
         # get reserved usernames from server
-        self.socket.sendall((username + '\n' + password + '\n').encode())
+        self.socket.sendall((username + '\n').encode())
+        #self.socket.sendall((password + '\n').encode())
         print(username)
         ans = self.socket.recv(1024).decode()
 
@@ -409,7 +411,7 @@ class ChatApp(QMainWindow):
 
         # auto complete options
         names = ["correlation table", "stock returns", "dividends", "financials", "balance sheet", "cash flow",
-                 "recommendations", "major holders", "institutional holders", "graphics", "predict"]
+                 "recommendations", "major holders", "institutional holders", "graphics", "predict", "statistics"]
         locale_names = []
         for name in names:
             locale_names.append(self.locale.gettext(name))
@@ -453,8 +455,9 @@ class ChatApp(QMainWindow):
 
     def submit(self):
         self.cmd = self.lineedit.text()
-        self.w = Parametres(self.cmd, self.client)
-        self.w.show()
+        if self.cmd != "statistics":
+            self.w = Parametres(self.cmd, self.client)
+            self.w.show()
 
     def send_message(self):
         # Get the message from the input field
