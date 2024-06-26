@@ -262,9 +262,11 @@ def plot_correlation_table(correlation_table, filename):
     :param correlation_table: таблица корреляции в формате DataFrame
     :param filename: имя файла для сохранения
     """
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(16, 9))
     sns.heatmap(correlation_table, annot=True, cmap='coolwarm', linewidths=0.5)
     plt.title('Correlation Table')
+    plt.xticks(rotation=45)
+    plt.tight_layout() 
     plt.savefig(filename, format='jpg')
     plt.close()
 
