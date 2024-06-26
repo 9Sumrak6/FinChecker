@@ -688,7 +688,7 @@ async def chat(reader, writer):
                     # await send_file(writer, uid, "1.txt")
                 elif query[0] == 'predict':
                     uid = query[1]
-                    ticker = companies[query[2]]
+                    ticker = companies[query[2].strip()]
                     start_date = query[3]
                     end_date = query[4]
                     forecast_days = int(query[5])
