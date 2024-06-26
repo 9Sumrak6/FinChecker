@@ -649,7 +649,7 @@ async def chat(reader, writer):
                     await send_file(writer, uid, full_path, '.csv')
                 elif query[0] == 'balance':
                     uid = query[1]
-                    ticker = companies[query[2]]
+                    ticker = companies[query[2].strip()]
                     full_path = f"server_generates/{name}/aapl_balance_sheet"
                     get_balance_sheet(ticker, f'{full_path}.csv')
                     await send_file(writer, uid, full_path, '.csv')
