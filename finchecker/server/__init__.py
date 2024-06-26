@@ -264,6 +264,17 @@ def predict_stock_price(ticker, start_date, end_date, forecast_days, filename):
     plt.savefig(filename, format='jpg')
     plt.close()
 
+def get_earliest_date(ticker):
+    """
+    Получить самую раннюю доступную дату для указанного тикера.
+
+    :param ticker: тикер акции
+    :return: самая ранняя доступная дата в формате 'YYYY-MM-DD'
+    """
+    data = yf.download(ticker, start='1900-01-01')
+    earliest_date = data.index.min()
+    return earliest_date.strftime('%Y-%m-%d')
+
 clients_names = set()
 clients_conns = dict()
 clients_locales = dict()
