@@ -6,8 +6,10 @@ import os
 import cmd
 import threading
 import gettext
-import seaborn
-from matplotlib import pyplot as plt 
+import seaborn as sns
+import pandas as pd
+from matplotlib import pyplot as plt
+from PIL import Image
 
 import xml.etree.ElementTree as ET
 from common import companies
@@ -176,7 +178,7 @@ class Client(cmd.Cmd):
         for i in Client.keys:
             values.append(get_stat(self.cur_path_xml, self.tree, self.root, i))
 
-        df = pd.DataFrame({'country': tmp.index, 'num': tmp.values})
+        df = pd.DataFrame({'country': Client.keys, 'num': values})
 
         plt.figure(figsize=(10, 5))
 
@@ -189,7 +191,8 @@ class Client(cmd.Cmd):
 
         plt.grid(True)
         plt.savefig('picture.jpg')
-        os.startfile('picture.jpg')
+        im = Image.open("picture.jpg")
+        im.show()
 
     def do_EOF(self):
         """End client activity."""
@@ -501,9 +504,10 @@ class ChatApp(QMainWindow):
 
     def submit(self):
         self.cmd = self.lineedit.text()
-        if self.cmd != "statistics":
-            self.w = Parametres(self.cmd, self.client)
-            self.w.show()
+        if self.cmd == "statistics":
+            self.client.do_vis()
+        self.w = Parametres(self.cmd, self.client)
+        self.w.show()
 
     def send_message(self):
         # Get the message from the input field
