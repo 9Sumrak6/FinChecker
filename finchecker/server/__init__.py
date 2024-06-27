@@ -613,7 +613,7 @@ async def chat(reader, writer):
                         if i == name:
                             continue
 
-                        await clients_conns[i].put('say ' + query[1])
+                        await clients_conns[i].put('say ' + ";".join(query[1:]))
 
                     send = asyncio.create_task(reader.readline())
                     continue
