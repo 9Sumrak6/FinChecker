@@ -207,8 +207,8 @@ def plot_statistics():
 
     plt.grid(True)
 
-    if not Path('generates').is_dir():
-        Path('generates').mkdir(parents=True, exist_ok=True)
+    if not Path('server_generates').is_dir():
+        Path('server_generates').mkdir(parents=True, exist_ok=True)
 
     plt.xticks(rotation=45)
     plt.tight_layout()
