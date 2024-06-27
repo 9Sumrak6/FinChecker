@@ -21,14 +21,14 @@ from sklearn.metrics import mean_squared_error
 
 
 full_name = {
-        'correlation table': 'corr',
-        'stock returns': 'stock',
+        'correlation_table': 'corr',
+        'stock_returns': 'stock',
         'dividends': 'dividends',
         'financials': 'fin',
-        'balance sheet': 'balance',
-        'cash flow': 'cash',
+        'balance_sheet': 'balance',
+        'cash_flow': 'cash',
         'recommendations': 'recom',
-        'major holders': 'm_hold',
+        'major_holders': 'm_hold',
         'institutional holders': 'i_hold',
         'graphics': 'graphics',
         'sayall': 'sayall',
@@ -168,6 +168,7 @@ def update_stat(name, cmd):
             cmd = i
             break
 
+    print(name, cmd)
     for user in root:
         if user.get('id') == name:
             for command in user:
@@ -605,7 +606,7 @@ async def chat(reader, writer):
                 if len(query) == 0:
                     writer.write("Command is incorrect.\n".encode())
                     continue
-
+                print(query)
                 update_stat(name, query[0])
                 # print(query)
                 if query[0] == 'sayall':
