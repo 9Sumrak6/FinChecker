@@ -2,7 +2,8 @@ import unittest
 import pandas as pd
 
 
-from finchecker.server.__init__ import get_correlation_table, plot_correlation_table
+from finchecker.server.__init__ import get_correlation_table, plot_correlation_table, get_stock_returns, \
+    plot_stock_returns
 
 class TestServer(unittest.TestCase):
     """Test server."""
@@ -46,6 +47,19 @@ class TestServer(unittest.TestCase):
         # Запись имён сравниваемых файлов
         file1 = 'tests_files/correlation_table_model.jpg'
         file2 = 'correlation_table.jpg'
+
+        # Сравнение содержимого файлов
+        self.assertTrue(self.compare_jpg_files(file1, file2), "JPG файлы не совпадают")
+
+    def test_2_test_server(self):
+        """Second test."""
+        # Генерация файла corr_table_create.csv
+        returns = get_stock_returns("AMZN", "2018-12-12", "2022-02-02", 'aapl_returns.csv')
+        plot_stock_returns(returns, "AMZN", 'aapl_returns.jpg')
+
+        # Запись имён сравниваемых файлов
+        file1 = 'tests_files/aapl_returns_model.jpg'
+        file2 = 'aapl_returns.jpg'
 
         # Сравнение содержимого файлов
         self.assertTrue(self.compare_jpg_files(file1, file2), "JPG файлы не совпадают")
