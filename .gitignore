@@ -1,8 +1,3 @@
-!/tests_files/*.csv
-!/tests_files/*.jpg
-!/tests_files/*.xml
-!/gui-examle/*.png
-
 generates
 server_generates
 
@@ -18,6 +13,11 @@ server_generates
 *.mo
 *.db
 *build*
+
+!/tests_files/*.csv
+!/tests_files/*.jpg
+!/tests_files/*.xml
+!/gui-examle/*.png
 
 */*/*.xml
 */*/__pycache__
