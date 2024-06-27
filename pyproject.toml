@@ -16,4 +16,4 @@ start_client = "finchecker.client.__main__:main"
 finchecker = "finchecker"
 
 [tool.setuptools.package-data]
-mood = ["finchecker/*/*/gui.mo", "finchecker/build/*"]
+mood = ["finchecker/*/*/*/*.mo", "finchecker/build/*"]

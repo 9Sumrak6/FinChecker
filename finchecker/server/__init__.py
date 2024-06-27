@@ -750,5 +750,7 @@ async def run_server():
 def main():
     """Start server activity."""
     create_xml()
-    asyncio.run(run_server())
-    plot_statistics()
+    try:
+        asyncio.run(run_server())
+    except KeyboardInterrupt:
+        plot_statistics()
