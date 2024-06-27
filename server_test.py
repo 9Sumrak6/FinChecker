@@ -1,11 +1,10 @@
 import unittest
 
 import pandas as pd
-import xml.etree.ElementTree as ET
-from pathlib import Path
 
 from finchecker.server import get_correlation_table, plot_correlation_table, get_stock_returns, \
     plot_stock_returns, cut_login, create_xml, get_dividends, plot_dividends, plot_stock_prices
+
 
 class TestServer(unittest.TestCase):
     """Test server."""
@@ -38,11 +37,13 @@ class TestServer(unittest.TestCase):
 
         # Сравнение содержимого файлов
         self.assertEqual(model_df.to_csv(index=False), created_df.to_csv(index=False), "CSV файлы не совпадают")
-    
+
     def test_1_test_server(self):
         """First test."""
         # Генерация файла correlation_table.jpg
-        correlation_table = get_correlation_table(["AMZN", "CAT", "AEE", "ABNB"], "2020-01-01", "2022-01-01", 'correlation_table.csv')
+        correlation_table = get_correlation_table(["AMZN", "CAT", "AEE", "ABNB"], "2020-01-01", "2022-01-01",\
+                                                  'correlation_table.csv')
+
         plot_correlation_table(correlation_table, 'correlation_table.jpg')
 
         # Запись имён сравниваемых файлов
@@ -101,4 +102,4 @@ class TestServer(unittest.TestCase):
         file2 = 'aapl_stock_prices.jpg'
 
         # Сравнение содержимого файлов
-        self.assertTrue(self.compare_jpg_files(file1, file2), "JPG файлы не совпадают")    
+        self.assertTrue(self.compare_jpg_files(file1, file2), "JPG файлы не совпадают")

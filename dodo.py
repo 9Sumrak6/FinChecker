@@ -34,7 +34,8 @@ def task_gen_mo():
     """Generate .mo file."""
     return {
             'actions': ['mkdir -p finchecker/po/ru_RU.UTF-8/LC_MESSAGES/',
-                        'pybabel compile -l ru_RU.UTF-8 -i i18n/po/ru_RU.UTF-8/LC_MESSAGES/gui.po -D gui -d finchecker/po'],
+                        'pybabel compile -l ru_RU.UTF-8 -i i18n/po/ru_RU.UTF-8/LC_MESSAGES/gui.po \
+                            -D gui -d finchecker/po'],
             'file_dep': ['i18n/po/ru_RU.UTF-8/LC_MESSAGES/gui.po'],
             'targets': ['finchecker/po/ru_RU.UTF-8/LC_MESSAGES/gui.mo'],
             'doc': 'compile translations',
