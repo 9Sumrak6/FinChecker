@@ -70,12 +70,16 @@ def create_xml():
     """Create xml pattern for statistics and login."""
     global tree, root, path_xml, path_login, tree_login, root_login
 
+    fl, fl1 = True, True
+
     if not Path(path_xml).is_file():
         root = ET.Element("statistics")
         tree = ET.ElementTree(root)
         indent(root)
 
         tree.write(path_xml, encoding="utf-8", xml_declaration=True)
+
+        fl = False
 
     tree = ET.parse(path_xml)
     root = tree.getroot()
@@ -87,10 +91,12 @@ def create_xml():
 
         tree_login.write(path_login, encoding="utf-8", xml_declaration=True)
 
+        fl1 = False
+
     tree_login = ET.parse(path_login)
     root_login = tree_login.getroot()
 
-    return True
+    return (fl, fl1)
 
 
 def add_user(username, pswd, full_name):
@@ -102,6 +108,7 @@ def add_user(username, pswd, full_name):
     :param full_name: dictionary of commands
     """
     global tree, root, path_xml, tree_login, root_login, path_login
+    print(tree, root, path_xml, path_login, tree_login, root_login)
 
     for child in root_login:
         if child.get('id') == username:

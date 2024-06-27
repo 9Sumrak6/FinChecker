@@ -1,9 +1,11 @@
 import unittest
-import pandas as pd
 
+import pandas as pd
+import xml.etree.ElementTree as ET
+from pathlib import Path
 
 from finchecker.server import get_correlation_table, plot_correlation_table, get_stock_returns, \
-    plot_stock_returns, cut_login
+    plot_stock_returns, cut_login, create_xml
 
 class TestServer(unittest.TestCase):
     """Test server."""
@@ -66,8 +68,13 @@ class TestServer(unittest.TestCase):
 
     def test_3_test_server(self):
         """Third test."""
-        self.assertTrue(cut_login("usr my_name /pswd/ my_password"), ('my_name', 'my_password'))
+        self.assertEqual(cut_login("usr my_name /pswd/ my_password"), ('my_name', 'my_password'))
 
     def test_4_test_server(self):
-        """Third test."""
-        self.assertTrue(cut_login("usr my name /pswd/ my password"), ('my name', 'my password'))
+        """Fourth test."""
+        self.assertEqual(cut_login("usr my name /pswd/ my password"), ('my name', 'my password'))
+
+    def test_5_test_server(self):
+        """Fifth test."""
+        create_xml()
+        self.assertEqual(create_xml(), (True, True))
