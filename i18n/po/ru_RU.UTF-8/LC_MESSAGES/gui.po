@@ -10,123 +10,123 @@ msgstr ""
 "POT-Creation-Date: 2024-06-26 15:14+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: ru_RU.UTF-8\n"
+"Language: ru_RU.UTF_8\n"
 "Language-Team: ru_RU.UTF-8 <LL@li.org>\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.14.0\n"
+"Generated-By: Babel 2.15.0\n"
 
-#: finchecker/client/__init__.py:187
+#: finchecker/client/__init__.py:219
 msgid "Statistics of requests"
 msgstr "Статистика запросов"
 
-#: finchecker/client/__init__.py:191
+#: finchecker/client/__init__.py:223
 msgid "Request"
 msgstr "Запросы"
 
-#: finchecker/client/__init__.py:192
+#: finchecker/client/__init__.py:224
 msgid "Number of requests"
 msgstr "Количество запросов"
 
-#: finchecker/client/__init__.py:283
+#: finchecker/client/__init__.py:339
 msgid "Login Form"
 msgstr "Авторизация"
 
-#: finchecker/client/__init__.py:294
+#: finchecker/client/__init__.py:350
 msgid "Username:"
 msgstr "Имя пользователя:"
 
-#: finchecker/client/__init__.py:296
+#: finchecker/client/__init__.py:352
 msgid "Password:"
 msgstr "Пароль"
 
-#: finchecker/client/__init__.py:301
+#: finchecker/client/__init__.py:357
 msgid "Login"
 msgstr "Вход"
 
-#: finchecker/client/__init__.py:324
+#: finchecker/client/__init__.py:381
 msgid "Login Failed"
 msgstr "Не удалось авторизоваться"
 
-#: finchecker/client/__init__.py:324
+#: finchecker/client/__init__.py:382
 msgid "Invalid username or password. Please try again."
 msgstr "Имя пользователя уже занято. Пожалуйста, попробуйте снова."
 
-#: finchecker/client/__init__.py:334
+#: finchecker/client/__init__.py:392
 msgid "Login Successful"
 msgstr "Авторизация успешно выполнена"
 
-#: finchecker/client/__init__.py:334
+#: finchecker/client/__init__.py:393
 msgid "Welcome, "
 msgstr "Добро пожаловать, "
 
-#: finchecker/client/__init__.py:363
-msgid "Parametres for "
+#: finchecker/client/__init__.py:431
+msgid "Parameters for "
 msgstr "Параметры для "
 
-#: finchecker/client/__init__.py:374
+#: finchecker/client/__init__.py:442
 msgid "Company:"
 msgstr "Компания:"
 
-#: finchecker/client/__init__.py:380
+#: finchecker/client/__init__.py:448
 msgid "Start date:"
 msgstr "Начальная дата:"
 
-#: finchecker/client/__init__.py:382 finchecker/client/__init__.py:385
+#: finchecker/client/__init__.py:450 finchecker/client/__init__.py:453
 msgid "Date format: YYYY-MM-DD"
 msgstr "Формат даты: ГГГГ-ММ-ДД"
 
-#: finchecker/client/__init__.py:383
+#: finchecker/client/__init__.py:451
 msgid "End date:"
 msgstr "Последняя дата:"
 
-#: finchecker/client/__init__.py:386
+#: finchecker/client/__init__.py:454
 msgid "The number of days to predict:"
 msgstr "Число дней для предсказания"
 
-#: finchecker/client/__init__.py:388
+#: finchecker/client/__init__.py:456
 msgid "File name:"
 msgstr "Имя файла:"
 
-#: finchecker/client/__init__.py:402 finchecker/client/__init__.py:477
+#: finchecker/client/__init__.py:470 finchecker/client/__init__.py:561
 msgid "Submit"
 msgstr "Выполнить"
 
-#: finchecker/client/__init__.py:424 finchecker/client/__init__.py:428
-#: finchecker/client/__init__.py:434
+#: finchecker/client/__init__.py:494 finchecker/client/__init__.py:499
+#: finchecker/client/__init__.py:506
 msgid "made Successfully"
 msgstr "успешно выполнено"
 
-#: finchecker/client/__init__.py:425 finchecker/client/__init__.py:429
-#: finchecker/client/__init__.py:434
+#: finchecker/client/__init__.py:495 finchecker/client/__init__.py:500
+#: finchecker/client/__init__.py:507
 msgid "Check file "
 msgstr "Проверьте файл "
 
-#: finchecker/client/__init__.py:425 finchecker/client/__init__.py:429
-#: finchecker/client/__init__.py:434
+#: finchecker/client/__init__.py:496 finchecker/client/__init__.py:501
+#: finchecker/client/__init__.py:508
 msgid " in folder"
 msgstr " в папке"
 
-#: finchecker/client/__init__.py:436
+#: finchecker/client/__init__.py:510
 msgid "Fail"
 msgstr "Ошибка"
 
-#: finchecker/client/__init__.py:436
+#: finchecker/client/__init__.py:511
 msgid "Incorrect date format. Please try again."
 msgstr "Неправильный формат даты. Попробуйте снова"
 
-#: finchecker/client/__init__.py:451
+#: finchecker/client/__init__.py:535
 msgid "Chat"
 msgstr "Чат"
 
-#: finchecker/client/__init__.py:471
+#: finchecker/client/__init__.py:556
 msgid "Command"
 msgstr "Команда"
 
-#: finchecker/client/__init__.py:487
+#: finchecker/client/__init__.py:571
 msgid "Type your message here...and press Enter key."
 msgstr "Напишите свое сообщение здесь и нажмите Enter"
 

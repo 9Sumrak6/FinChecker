@@ -8,10 +8,12 @@ server_generates
 *.csv
 !/tests_files/*.csv
 !/tests_files/*.jpg
+!/tests_files/*.xml
 *.xls*
 *.xml
 *.pot
 *.mo
+*.db
 *build*
 */*/*.xml
 */*/__pycache__
