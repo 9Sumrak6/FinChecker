@@ -530,6 +530,7 @@ class ChatApp(QMainWindow):
         :param lang: locale language
         """
         super().__init__()
+        self.lang = lang
         self.locale = LOCALES[lang]
         self.username = name
         self.client = client
@@ -604,7 +605,7 @@ class ChatApp(QMainWindow):
         if self.cmd == "documentation":
             self.client.do_doc()
             return
-        self.w = Parameters(self.cmd, self.client)
+        self.w = Parameters(self.cmd, self.client, self.lang)
         self.w.show()
 
     def send_message(self):
