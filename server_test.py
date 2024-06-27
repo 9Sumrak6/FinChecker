@@ -40,7 +40,7 @@ class TestServer(unittest.TestCase):
     
     def test_1_test_server(self):
         """First test."""
-        # Генерация файла corr_table_create.csv
+        # Генерация файла correlation_table.jpg
         correlation_table = get_correlation_table(["AMZN", "CAT", "AEE", "ABNB"], "2020-01-01", "2022-01-01", 'correlation_table.csv')
         plot_correlation_table(correlation_table, 'correlation_table.jpg')
 
@@ -53,7 +53,7 @@ class TestServer(unittest.TestCase):
 
     def test_2_test_server(self):
         """Second test."""
-        # Генерация файла corr_table_create.csv
+        # Генерация файла aapl_returns.jpg
         returns = get_stock_returns("AMZN", "2018-12-12", "2022-02-02", 'aapl_returns.csv')
         plot_stock_returns(returns, "AMZN", 'aapl_returns.jpg')
 
