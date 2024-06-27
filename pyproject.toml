@@ -9,8 +9,8 @@ requires = ['setuptools']
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-start_server = "mood.server.__main__:main"
-start_client = "mood.client.__main__:main"
+start_server = "finchecker.server.__main__:main"
+start_client = "finchecker.client.__main__:main"
 
 [tool.setuptools.package-dir]
 finchecker = "finchecker"
