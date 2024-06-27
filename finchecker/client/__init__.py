@@ -344,7 +344,7 @@ class LoginFormApp(QMainWindow):
 
         # Set the window properties (title and initial size)
         self.setWindowTitle(self.locale.gettext("Login Form"))
-        self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
+        self.setGeometry(700, 500, 500, 150)  # (x, y, width, height)
 
         # Create a central widget for the main window
         central_widget = QWidget()
@@ -436,7 +436,7 @@ class Parameters(QWidget):
 
         # Set the window properties (title and initial size)
         self.setWindowTitle(self.locale.gettext("Parameters for ") + cmd)
-        self.setGeometry(100, 100, 300, 150)  # (x, y, width, height)
+        self.setGeometry(700, 500, 500, 150)  # (x, y, width, height)
 
         layout = QGridLayout()
         self.setLayout(layout)
@@ -541,7 +541,7 @@ class ChatApp(QMainWindow):
 
         # Set the window properties (title and initial size)
         self.setWindowTitle(self.locale.gettext("Chat"))
-        self.setGeometry(100, 100, 400, 300)  # (x, y, width, height)
+        self.setGeometry(700, 150, 500, 700)  # (x, y, width, height)
 
         # Create a central widget for the main window
         central_widget = QWidget()
