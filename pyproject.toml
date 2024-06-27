@@ -1,0 +1,19 @@
+[project]
+name = "FinChecker"
+version = "1.0.0"
+dependencies = ["yfinance", "pyqt5", "matplotlib", "seaborn", "scikit-learn"]
+description = "Multi-user application for financial data analyses"
+
+[build-system]
+requires = ['setuptools']
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+start_server = "mood.server.__main__:main"
+start_client = "mood.client.__main__:main"
+
+[tool.setuptools.package-dir]
+finchecker = "finchecker"
+
+[tool.setuptools.package-data]
+mood = ["finchecker/*/*/gui.mo", "finchecker/build/*"]

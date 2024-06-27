@@ -1,0 +1,8 @@
+graft finchecker
+graft i18n
+graft docs
+
+include pyproject.toml
+include Pipfile
+include *.py
+include .flake8

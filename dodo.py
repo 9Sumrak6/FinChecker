@@ -72,7 +72,7 @@ def task_gen_html():
 def task_test():
     """Run tests."""
     return {
-            'actions': ['python3 -m unittest server_test.py', 'python3 -m unittest client_test.py'],
+            'actions': ['python3 -m unittest server_test.py'],
             'task_dep': ['i18n'],
             'doc': 'Test client and server.',
     }

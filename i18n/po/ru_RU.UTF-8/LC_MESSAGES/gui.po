@@ -129,3 +129,4 @@ msgstr "Команда"
 #: finchecker/client/__init__.py:570
 msgid "Type your message here...and press Enter key."
 msgstr "Напишите свое сообщение здесь и нажмите Enter"
+
