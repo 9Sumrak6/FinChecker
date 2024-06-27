@@ -9,6 +9,8 @@ import gettext
 import seaborn as sns
 import pandas as pd
 import locale
+import webbrowser
+
 from matplotlib import pyplot as plt
 from PIL import Image
 
@@ -21,6 +23,8 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QFormLayout, QLa
 from PyQt5.QtCore import Qt
 from datetime import date
 
+
+path_doc = str(os.path.dirname(__file__) + '/../docs/build/html/index.html')
 
 PO_PATH = str(os.path.dirname(__file__) + '/../po')
 LOCALES = {
@@ -232,6 +236,10 @@ class Client(cmd.Cmd):
 
         im = Image.open("generates/statistics.jpg")
         im.show()
+
+    def do_doc(self):
+        """Open documentation."""
+        webbrowser.open(path_doc)
 
     def do_EOF(self, fl):
         """End client activity."""
@@ -545,7 +553,7 @@ class ChatApp(QMainWindow):
 
         # auto complete options
         names = ["correlation table", "stock returns", "dividends", "financials", "balance sheet", "cash flow",
-                 "recommendations", "major holders", "institutional holders", "graphics", "predict", "statistics"]
+                 "recommendations", "major holders", "institutional holders", "graphics", "predict", "statistics", "documentation"]
         locale_names = []
         for name in names:
             locale_names.append(self.locale.gettext(name))
@@ -592,6 +600,9 @@ class ChatApp(QMainWindow):
         self.cmd = self.lineedit.text()
         if self.cmd == "statistics":
             self.client.do_vis()
+            return
+        if self.cmd == "documentation":
+            self.client.do_doc()
             return
         self.w = Parameters(self.cmd, self.client)
         self.w.show()

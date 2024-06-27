@@ -19,114 +19,114 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.15.0\n"
 
-#: finchecker/client/__init__.py:218
+#: finchecker/client/__init__.py:222
 msgid "Statistics of requests"
 msgstr "Статистика запросов"
 
-#: finchecker/client/__init__.py:222
+#: finchecker/client/__init__.py:226
 msgid "Request"
 msgstr "Запросы"
 
-#: finchecker/client/__init__.py:223
+#: finchecker/client/__init__.py:227
 msgid "Number of requests"
 msgstr "Количество запросов"
 
-#: finchecker/client/__init__.py:338
+#: finchecker/client/__init__.py:346
 msgid "Login Form"
 msgstr "Авторизация"
 
-#: finchecker/client/__init__.py:349
+#: finchecker/client/__init__.py:357
 msgid "Username:"
 msgstr "Имя пользователя:"
 
-#: finchecker/client/__init__.py:351
+#: finchecker/client/__init__.py:359
 msgid "Password:"
 msgstr "Пароль"
 
-#: finchecker/client/__init__.py:356
+#: finchecker/client/__init__.py:364
 msgid "Login"
 msgstr "Вход"
 
-#: finchecker/client/__init__.py:380
+#: finchecker/client/__init__.py:388
 msgid "Login Failed"
 msgstr "Не удалось авторизоваться"
 
-#: finchecker/client/__init__.py:381
+#: finchecker/client/__init__.py:389
 msgid "Invalid username or password. Please try again."
 msgstr "Имя пользователя уже занято. Пожалуйста, попробуйте снова."
 
-#: finchecker/client/__init__.py:391
+#: finchecker/client/__init__.py:399
 msgid "Login Successful"
 msgstr "Авторизация успешно выполнена"
 
-#: finchecker/client/__init__.py:392
+#: finchecker/client/__init__.py:400
 msgid "Welcome, "
 msgstr "Добро пожаловать, "
 
-#: finchecker/client/__init__.py:430
+#: finchecker/client/__init__.py:438
 msgid "Parameters for "
 msgstr "Параметры для "
 
-#: finchecker/client/__init__.py:441
+#: finchecker/client/__init__.py:449
 msgid "Company:"
 msgstr "Компания:"
 
-#: finchecker/client/__init__.py:447
+#: finchecker/client/__init__.py:455
 msgid "Start date:"
 msgstr "Начальная дата:"
 
-#: finchecker/client/__init__.py:449 finchecker/client/__init__.py:452
+#: finchecker/client/__init__.py:457 finchecker/client/__init__.py:460
 msgid "Date format: YYYY-MM-DD"
 msgstr "Формат даты: ГГГГ-ММ-ДД"
 
-#: finchecker/client/__init__.py:450
+#: finchecker/client/__init__.py:458
 msgid "End date:"
 msgstr "Последняя дата:"
 
-#: finchecker/client/__init__.py:453
+#: finchecker/client/__init__.py:461
 msgid "The number of days to predict:"
 msgstr "Число дней для предсказания"
 
-#: finchecker/client/__init__.py:455
+#: finchecker/client/__init__.py:463
 msgid "File name:"
 msgstr "Имя файла:"
 
-#: finchecker/client/__init__.py:469 finchecker/client/__init__.py:560
+#: finchecker/client/__init__.py:477 finchecker/client/__init__.py:568
 msgid "Submit"
 msgstr "Выполнить"
 
-#: finchecker/client/__init__.py:493 finchecker/client/__init__.py:498
-#: finchecker/client/__init__.py:505
+#: finchecker/client/__init__.py:501 finchecker/client/__init__.py:506
+#: finchecker/client/__init__.py:513
 msgid "made Successfully"
 msgstr "успешно выполнено"
 
-#: finchecker/client/__init__.py:494 finchecker/client/__init__.py:499
-#: finchecker/client/__init__.py:506
+#: finchecker/client/__init__.py:502 finchecker/client/__init__.py:507
+#: finchecker/client/__init__.py:514
 msgid "Check file "
 msgstr "Проверьте файл "
 
-#: finchecker/client/__init__.py:495 finchecker/client/__init__.py:500
-#: finchecker/client/__init__.py:507
+#: finchecker/client/__init__.py:503 finchecker/client/__init__.py:508
+#: finchecker/client/__init__.py:515
 msgid " in folder"
 msgstr " в папке"
 
-#: finchecker/client/__init__.py:509
+#: finchecker/client/__init__.py:517
 msgid "Fail"
 msgstr "Ошибка"
 
-#: finchecker/client/__init__.py:510
+#: finchecker/client/__init__.py:518
 msgid "Incorrect date format. Please try again."
 msgstr "Неправильный формат даты. Попробуйте снова"
 
-#: finchecker/client/__init__.py:534
+#: finchecker/client/__init__.py:542
 msgid "Chat"
 msgstr "Чат"
 
-#: finchecker/client/__init__.py:555
+#: finchecker/client/__init__.py:563
 msgid "Command"
 msgstr "Команда"
 
-#: finchecker/client/__init__.py:570
+#: finchecker/client/__init__.py:578
 msgid "Type your message here...and press Enter key."
 msgstr "Напишите свое сообщение здесь и нажмите Enter"
 
