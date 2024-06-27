@@ -1,3 +1,5 @@
+"""Program for testing functions."""
+
 import unittest
 
 import pandas as pd
@@ -41,7 +43,7 @@ class TestServer(unittest.TestCase):
     def test_1_test_server(self):
         """First test."""
         # Генерация файла correlation_table.jpg
-        correlation_table = get_correlation_table(["AMZN", "CAT", "AEE", "ABNB"], "2020-01-01", "2022-01-01",\
+        correlation_table = get_correlation_table(["AMZN", "CAT", "AEE", "ABNB"], "2020-01-01", "2022-01-01", \
                                                   'correlation_table.csv')
 
         plot_correlation_table(correlation_table, 'correlation_table.jpg')
