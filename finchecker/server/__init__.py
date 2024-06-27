@@ -108,7 +108,6 @@ def add_user(username, pswd, full_name):
     :param full_name: dictionary of commands
     """
     global tree, root, path_xml, tree_login, root_login, path_login
-    print(tree, root, path_xml, path_login, tree_login, root_login)
 
     for child in root_login:
         if child.get('id') == username:
@@ -608,7 +607,7 @@ async def chat(reader, writer):
                     continue
 
                 update_stat(name, query[0])
-                print(query)
+                # print(query)
                 if query[0] == 'sayall':
                     for i in clients_names:
                         if i == name:
