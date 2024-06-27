@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from finchecker.server import get_correlation_table, plot_correlation_table, get_stock_returns, \
-    plot_stock_returns, cut_login, create_xml, get_dividends, plot_dividends
+    plot_stock_returns, cut_login, create_xml, get_dividends, plot_dividends, plot_stock_prices
 
 class TestServer(unittest.TestCase):
     """Test server."""
@@ -21,7 +21,6 @@ class TestServer(unittest.TestCase):
         with open(file1, 'rb') as f1, open(file2, 'rb') as f2:
             content1 = f1.read()
             content2 = f2.read()
-
             return content1 == content2
 
     def test_0_test_server(self):
@@ -81,7 +80,7 @@ class TestServer(unittest.TestCase):
 
     def test_6_test_server(self):
         """Sixth test."""
-        # Генерация файла aapl_returns.jpg
+        # Генерация файла aapl_dividends.jpg
         dividends = get_dividends("AOS", "2018-01-01", "2020-02-02", 'aapl_dividends.csv')
         plot_dividends(dividends, "AOS", 'aapl_dividends.jpg')
 
@@ -91,3 +90,15 @@ class TestServer(unittest.TestCase):
 
         # Сравнение содержимого файлов
         self.assertTrue(self.compare_jpg_files(file1, file2), "JPG файлы не совпадают")
+
+    def test_7_test_server(self):
+        """Seventh test."""
+        # Генерация файла aapl_stock_prices.jpg
+        plot_stock_prices("AMZN", "2021-01-01", "2021-01-20", 'aapl_stock_prices.jpg')
+
+        # Запись имён сравниваемых файлов
+        file1 = 'tests_files/aapl_stock_prices_model.jpg'
+        file2 = 'aapl_stock_prices.jpg'
+
+        # Сравнение содержимого файлов
+        self.assertTrue(self.compare_jpg_files(file1, file2), "JPG файлы не совпадают")    
