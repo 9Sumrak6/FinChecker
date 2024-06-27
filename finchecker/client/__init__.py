@@ -554,7 +554,8 @@ class ChatApp(QMainWindow):
 
         # auto complete options
         names = ["correlation table", "stock returns", "dividends", "financials", "balance sheet", "cash flow",
-                 "recommendations", "major holders", "institutional holders", "graphics", "predict", "statistics", "documentation"]
+                 "recommendations", "major holders", "institutional holders", "graphics", "predict", "statistics",
+                 "documentation"]
         locale_names = []
         for name in names:
             locale_names.append(self.locale.gettext(name))
